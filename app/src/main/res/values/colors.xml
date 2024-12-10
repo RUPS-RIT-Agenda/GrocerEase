@@ -16,4 +16,10 @@
     <color name="darkText">#E0E0E0</color>          <!-- Dark Mode Text -->
     <color name="lightBackground">#FFFFFFFF</color>
 
+    <color name="myColorLight">#6AAF7D</color>
+    <color name="onMyColorLight">#F8ECD8</color>
+    <color name="myColorContainerLight">#74f8e5</color>
+    <color name="onMyColorContainerLight">#00201c</color>
+    <color name="onMyColorContainerLightMild">#b4f1be</color>
+    <color name="onMyColorChip">#EEF8F7</color>
 </resources>

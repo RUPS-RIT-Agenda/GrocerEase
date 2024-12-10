@@ -17,4 +17,8 @@
         <item name="android:textColorPrimary">@color/darkText</item>
     </style>
 
+    <style name="FABStyleExtended" parent="Widget.Material3.ExtendedFloatingActionButton.Icon.Primary">
+        <item name="backgroundTint">@color/myColorLight</item>
+        <item name="iconTint">@color/onMyColorLight</item>
+    </style>
 </resources>

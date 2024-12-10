@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.prvavaja.grocerease.databinding.ActivityLoginBinding
 import okhttp3.Call
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -25,40 +26,32 @@ import java.security.NoSuchAlgorithmException
 
 class LoginActivity : AppCompatActivity() {
 
-    private lateinit var emailEditText: EditText
-    private lateinit var passwordEditText: EditText
-    private lateinit var loginButton: Button
-    private lateinit var registerLink: TextView
-    private lateinit var btnBack: Button
+    private lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
 
-        emailEditText = findViewById(getResourceId("emailLogin"))
-        passwordEditText = findViewById(getResourceId("passwordLogin"))
-        loginButton = findViewById(getResourceId("btnLogin"))
-        registerLink = findViewById(R.id.registerLink)
-        btnBack = findViewById(getResourceId("btnBack"))
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        registerLink.setOnClickListener {
+        binding.registerLink.setOnClickListener {
             val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
             startActivity(intent)
         }
 
-        loginButton.setOnClickListener {
+        binding.btnLogin.setOnClickListener {
             loginUser()
         }
 
-        btnBack.setOnClickListener {
+        binding.btnBack.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
     }
 
     private fun loginUser() {
-        val email = emailEditText.text.toString().trim()
-        val password = passwordEditText.text.toString().trim()
+        val email = binding.emailLogin.editText?.text.toString().trim()
+        val password = binding.passwordLogin.editText?.text.toString().trim()
 
         if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "Please enter your credentials", Toast.LENGTH_SHORT).show()
@@ -148,10 +141,6 @@ class LoginActivity : AppCompatActivity() {
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
         return capabilities != null && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-    }
-
-    private fun getResourceId(name: String): Int {
-        return resources.getIdentifier(name, "id", packageName)
     }
 
     // Hash the password using SHA-256

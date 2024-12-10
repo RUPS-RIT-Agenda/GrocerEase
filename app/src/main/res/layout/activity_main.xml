@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:windowBackground"
+    android:background="@color/onMyColorLight"
     tools:context=".MainActivity">
 
     <com.google.android.material.imageview.ShapeableImageView
@@ -26,48 +26,59 @@
         app:strokeColor="@color/iconBack"
         app:strokeWidth="5dp" />
 
-    <Button
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/btnLogin"
-        android:layout_width="300dp"
-        android:layout_height="0dp"
+        style="@style/FABStyleExtended"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="Login Button"
         android:text="Login"
-        android:textSize="24sp"
-        android:drawablePadding="10dp"
-        android:drawableLeft="@drawable/login_icon"
-        android:paddingEnd="70dp"
+        android:textColor="@color/onMyColorLight"
+        app:icon="@drawable/login_icon"
         app:layout_constraintBottom_toTopOf="@+id/guideline31"
         app:layout_constraintEnd_toStartOf="@+id/guideline35"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="@+id/guideline34"
-        app:layout_constraintTop_toTopOf="@+id/guideline30" />
+        app:layout_constraintTop_toTopOf="@+id/guideline30"
+        app:layout_constraintVertical_bias="0.47"
+        app:maxImageSize="30dp" />
 
-    <Button
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/btnRegister"
-        android:layout_width="300dp"
-        android:layout_height="0dp"
+        style="@style/FABStyleExtended"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:contentDescription="Register Button"
         android:text="Register"
-        android:textSize="24sp"
-        android:drawableLeft="@drawable/register_icon"
-        android:paddingEnd="46dp"
+        android:textColor="@color/onMyColorLight"
+        app:icon="@drawable/register_icon"
         app:layout_constraintBottom_toTopOf="@+id/guideline32"
-        app:layout_constraintEnd_toStartOf="@+id/guideline35"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="@+id/guideline34"
-        app:layout_constraintTop_toTopOf="@+id/guideline31" />
+        app:layout_constraintEnd_toStartOf="@+id/guideline29"
+        app:layout_constraintHorizontal_bias="0.487"
+        app:layout_constraintStart_toStartOf="@+id/guideline28"
+        app:layout_constraintTop_toTopOf="@+id/guideline31"
+        app:layout_constraintVertical_bias="0.47"
+        app:maxImageSize="30dp" />
 
-    <Button
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/btnGuest"
-        android:layout_width="300dp"
-        android:layout_height="0dp"
+        style="@style/FABStyleExtended"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="Guest Button"
         android:text="Continue as guest"
-        android:textSize="23sp"
-        android:drawableLeft="@drawable/guest_icon"
+        android:textColor="@color/onMyColorLight"
+        app:icon="@drawable/guest_icon"
+        app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintBottom_toTopOf="@+id/guideline33"
-        app:layout_constraintEnd_toStartOf="@+id/guideline35"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="@+id/guideline34"
-        app:layout_constraintTop_toTopOf="@+id/guideline32" />
-
+        app:layout_constraintEnd_toStartOf="@+id/guideline29"
+        app:layout_constraintStart_toStartOf="@+id/guideline28"
+        app:layout_constraintTop_toTopOf="@+id/guideline32"
+        app:layout_constraintVertical_bias="0.47"
+        app:maxImageSize="30dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline26"

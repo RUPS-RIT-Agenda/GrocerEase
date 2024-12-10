@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:windowBackground"
+    android:background="@color/onMyColorLight"
     tools:context=".MainActivity">
 
     <TextView
@@ -12,20 +12,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Create an Account!"
-        android:textColor="@android:color/black"
+        android:layout_marginTop="50dp"
+        android:text="Register"
+        android:textColor="@color/myColorLight"
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/guideline26"
-        app:layout_constraintEnd_toStartOf="@+id/guideline29"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="@+id/guideline28"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/userImage"
         android:layout_width="150dp"
         android:layout_height="150dp"
-
         android:clickable="true"
         android:contentDescription="Profile Image"
         android:focusable="true"
@@ -36,106 +36,145 @@
         app:layout_constraintStart_toStartOf="@+id/guideline28"
         app:layout_constraintTop_toTopOf="@+id/guideline26"
         app:shapeAppearanceOverlay="@style/Circular"
-        app:srcCompat="@drawable/profile" />
+        app:srcCompat="@drawable/profile_circle" />
 
 
-    <EditText
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/usernameRegister"
-        android:layout_width="363dp"
-        android:layout_height="55dp"
-        android:background="@color/white"
-        android:focusableInTouchMode="true"
+        android:layout_width="260dp"
+        android:layout_height="60dp"
         android:hint="Username"
-        android:padding="12dp"
+        app:boxStrokeColor="@color/myColorLight"
+        app:endIconDrawable="@drawable/baseline_cancel_24"
+        app:endIconMode="custom"
+        app:endIconTint="@color/myColorLight"
+        app:hintTextColor="@color/myColorLight"
         app:layout_constraintBottom_toTopOf="@+id/guideline30"
-        app:layout_constraintEnd_toEndOf="@+id/guideline24"
+        app:layout_constraintEnd_toStartOf="@+id/guideline24"
         app:layout_constraintStart_toStartOf="@+id/guideline25"
-        app:layout_constraintTop_toTopOf="@+id/guideline27" />
+        app:layout_constraintTop_toTopOf="@+id/guideline27"
+        app:startIconDrawable="@drawable/baseline_person_2_24"
+        app:startIconTint="@color/myColorLight">
 
-    <EditText
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/emailRegister"
-        android:layout_width="366dp"
-        android:layout_height="55dp"
-        android:background="@color/white"
-        android:focusableInTouchMode="true"
+        android:layout_width="260dp"
+        android:layout_height="60dp"
         android:hint="Email"
-        android:inputType="textEmailAddress"
-        android:padding="12dp"
+        app:boxStrokeColor="@color/myColorLight"
+        app:endIconDrawable="@drawable/baseline_cancel_24"
+        app:endIconMode="custom"
+        app:endIconTint="@color/myColorLight"
+        app:hintTextColor="@color/myColorLight"
         app:layout_constraintBottom_toTopOf="@+id/guideline31"
-        app:layout_constraintEnd_toEndOf="@+id/guideline24"
+        app:layout_constraintEnd_toStartOf="@+id/guideline24"
         app:layout_constraintStart_toStartOf="@+id/guideline25"
-        app:layout_constraintTop_toTopOf="@+id/guideline30" />
+        app:layout_constraintTop_toTopOf="@+id/guideline30"
+        app:startIconDrawable="@drawable/baseline_email_24"
+        app:startIconTint="@color/myColorLight">
 
-    <EditText
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/passwordRegister"
-        android:layout_width="366dp"
-        android:layout_height="55dp"
-        android:background="@color/white"
-        android:focusableInTouchMode="true"
+        android:layout_width="260dp"
+        android:layout_height="60dp"
         android:hint="Password"
-        android:inputType="textPassword"
-        android:padding="12dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline32"
-        app:layout_constraintEnd_toEndOf="@+id/guideline24"
+        app:boxStrokeColor="@color/myColorLight"
+        app:endIconDrawable="@drawable/baseline_cancel_24"
+        app:endIconMode="custom"
+        app:endIconTint="@color/myColorLight"
+        app:hintTextColor="@color/myColorLight"
+        app:layout_constraintBottom_toTopOf="@+id/confirmPasswordRegister"
+        app:layout_constraintEnd_toStartOf="@+id/guideline24"
         app:layout_constraintStart_toStartOf="@+id/guideline25"
         app:layout_constraintTop_toTopOf="@+id/guideline31"
-        app:layout_constraintVertical_bias="0.444" />
+        app:startIconDrawable="@drawable/lock"
+        app:startIconTint="@color/myColorLight">
 
-    <EditText
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/confirmPasswordRegister"
-        android:layout_width="366dp"
-        android:layout_height="55dp"
-        android:layout_marginBottom="18dp"
-        android:background="@color/white"
-        android:focusableInTouchMode="true"
-        android:hint="Repeat password"
-        android:inputType="textPassword"
-        android:padding="12dp"
-        app:layout_constraintBottom_toBottomOf="@+id/loginLink"
-        app:layout_constraintEnd_toEndOf="@+id/guideline24"
+        android:layout_width="260dp"
+        android:layout_height="60dp"
+        android:hint="Repeat Password"
+        app:boxStrokeColor="@color/myColorLight"
+        app:endIconDrawable="@drawable/baseline_cancel_24"
+        app:endIconMode="custom"
+        app:endIconTint="@color/myColorLight"
+        app:hintTextColor="@color/myColorLight"
+        app:layout_constraintBottom_toTopOf="@+id/loginLink"
+        app:layout_constraintEnd_toStartOf="@+id/guideline24"
         app:layout_constraintStart_toStartOf="@+id/guideline25"
-        app:layout_constraintTop_toTopOf="@+id/guideline32" />
+        app:layout_constraintTop_toTopOf="@+id/guideline32"
+        app:startIconTint="@color/myColorLight">
 
-    <Button
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/btnRegister"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        style="@style/FABStyleExtended"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="56dp"
+        android:contentDescription="Register Button"
         android:text="Register"
-        android:textSize="24sp"
-        android:drawableLeft="@drawable/register_icon"
-        app:layout_constraintBottom_toTopOf="@+id/guideline34"
-        app:layout_constraintEnd_toStartOf="@+id/guideline29"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline28"
-        app:layout_constraintTop_toTopOf="@+id/guideline33"
-        app:layout_constraintVertical_bias="0.0" />
+        android:textColor="@color/onMyColorLight"
+        app:icon="@drawable/register_icon"
+        app:layout_constraintBottom_toTopOf="@+id/guideline35"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:maxImageSize="30dp" />
 
-    <Button
+    <ImageButton
         android:id="@+id/btnBack"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text="Back"
-        android:textSize="24sp"
-        android:drawableLeft="@drawable/back_icon"
-        android:paddingEnd="54dp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline29"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline28"
-        app:layout_constraintTop_toTopOf="@+id/guideline34"
-        app:layout_constraintBottom_toBottomOf="@+id/guideline35"
-        app:layout_constraintVertical_bias="0.0" />
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
+        android:background="@null"
+        android:contentDescription="Back Button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.044"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/baseline_arrow_back_ios_new_24"
+        app:tint="@color/myColorLight" />
+
 
     <TextView
         android:id="@+id/loginLink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:layout_gravity="center"
         android:text="Already have an account? Login here"
         android:textColor="@android:color/black"
-        app:layout_constraintBottom_toBottomOf="@+id/guideline33"
-        app:layout_constraintEnd_toStartOf="@+id/guideline29"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="@+id/guideline28" />
+        app:layout_constraintBottom_toTopOf="@+id/btnRegister"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline25"
@@ -212,7 +251,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.9" />
+        app:layout_constraintGuide_percent="0.92" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline35"
@@ -226,7 +265,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.35" />
+        app:layout_constraintGuide_percent="0.34" />
 
     <TextView
         android:id="@+id/textView2"
