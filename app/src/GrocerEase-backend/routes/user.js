@@ -5,19 +5,18 @@ const User = require('../models/User');
 const router = express.Router();
 
 router.post('/register', async (req, res) => {
-    console.log("kdsjdfkgkdgfj");
-    const { username, email, password, profile_image } = req.body;
+    const {username, email, password, profile_image} = req.body;
     console.log("REGISTER API..");
     console.log(req.body);
 
     if (!username || !email || !password) {
-        return res.status(400).json({ error: "Please fill in all fields" });
+        return res.status(400).json({error: "Please fill in all fields"});
     }
 
     try {
-        const existingUser = await User.findOne({ email });
+        const existingUser = await User.findOne({email});
         if (existingUser) {
-            return res.status(400).json({ error: "User already exists" });
+            return res.status(400).json({error: "User already exists"});
         }
 
         //const hashedPassword = await bcrypt.hash(password, 10);
@@ -30,39 +29,39 @@ router.post('/register', async (req, res) => {
         });
 
         await user.save();
-        res.status(201).json({ message: "User registered successfully" });
+        res.status(201).json({message: "User registered successfully"});
     } catch (error) {
-        res.status(500).json({ error: "Server error" });
+        res.status(500).json({error: "Server error"});
     }
 });
 
 router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
+    const {email, password} = req.body;
     console.log("LOGIN API..");
     console.log(req.body);
 
     // Basic validation of input
     if (!email || !password) {
-        return res.status(400).json({ error: "Please fill in all fields" });
+        return res.status(400).json({error: "Please fill in all fields"});
     }
 
     try {
         // Attempt to find user by email
-        const user = await User.findOne({ email });
+        const user = await User.findOne({email});
         if (!user) {
-            return res.status(400).json({ error: "Invalid email or password" });
+            return res.status(400).json({error: "Invalid email or password"});
         }
 
         // Compare the provided password with the stored password (already hashed)
         if (password !== user.password) {
-            return res.status(400).json({ error: "Invalid email or password" });
+            return res.status(400).json({error: "Invalid email or password"});
         }
 
         // Generate JWT token with the user ID and an expiry time of 1 hour
         const token = jwt.sign(
-            { userId: user._id },
+            {userId: user._id},
             process.env.JWT_SECRET || 'your_secret_key', // Ensure you have a secret key
-            { expiresIn: '1h' }
+            {expiresIn: '1h'}
         );
 
         // Respond with the token and the user ID
@@ -74,7 +73,7 @@ router.post('/login', async (req, res) => {
 
     } catch (error) {
         console.error("Login error:", error);
-        res.status(500).json({ error: "Server error, please try again later" });
+        res.status(500).json({error: "Server error, please try again later"});
     }
 });
 
@@ -85,7 +84,7 @@ router.get('/profile', async (req, res) => {
     const token = req.headers['authorization']?.split(' ')[1];
 
     if (!token) {
-        return res.status(401).json({ error: "Unauthorized access" });
+        return res.status(401).json({error: "Unauthorized access"});
     }
 
     try {
@@ -94,7 +93,7 @@ router.get('/profile', async (req, res) => {
 
         const user = await User.findById(userId).select('-password');
         if (!user) {
-            return res.status(404).json({ error: "User not found" });
+            return res.status(404).json({error: "User not found"});
         }
 
         const responseData = {
@@ -108,7 +107,7 @@ router.get('/profile', async (req, res) => {
         res.status(200).json(responseData);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: "Server error" });
+        res.status(500).json({error: "Server error"});
     }
 });
 

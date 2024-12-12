@@ -15,6 +15,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.prvavaja.grocerease.databinding.ActivityRegisterBinding
+import io.github.cdimascio.dotenv.dotenv
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -117,10 +118,17 @@ class RegisterActivity : AppCompatActivity() {
             }
         """.trimIndent()
 
+        val dotenv = dotenv {
+            directory = "./assets"
+            filename = "env" // instead of '.env', use 'env'
+        }
+        val apiHost = dotenv.get("API_HOST")
+        val apiPort = dotenv.get("API_PORT")
+
         val requestBody = jsonBody.toRequestBody(jsonMediaType)
         Log.d("RegisterActivity", jsonBody)
         val request = Request.Builder()
-            .url("http://localhost:6000/api/user/register")
+            .url("http://$apiHost:$apiPort/api/user/register")
             .post(requestBody)
             .build()
 

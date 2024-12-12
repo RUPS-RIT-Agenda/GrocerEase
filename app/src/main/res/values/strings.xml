@@ -6,4 +6,5 @@
         <item>Hofer</item>
         <item>Spar</item>
     </string-array>
+    <string name="api_host"></string>
 </resources>

@@ -6,23 +6,23 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.prvavaja.grocerease.databinding.ActivityLoginBinding
+import io.github.cdimascio.dotenv.Dotenv
+import io.github.cdimascio.dotenv.dotenv
 import okhttp3.Call
+import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
-import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Request
-import okhttp3.Callback
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import org.json.JSONObject
 import java.io.IOException
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
+
 
 class LoginActivity : AppCompatActivity() {
 
@@ -57,15 +57,11 @@ class LoginActivity : AppCompatActivity() {
             Toast.makeText(this, "Please enter your credentials", Toast.LENGTH_SHORT).show()
             return
         }
-
-        // Hash the password before sending it to the backend
-        val hashedPassword = hashPassword(password)
-
-//        if (isInternetAvailable()) {
-//            authenticateUserWithServer(email, hashedPassword)
-//        } else {
-//            authenticateUserWithSharedPrefs()
-//        }
+        if (isInternetAvailable()) {
+            authenticateUserWithServer(email, password)
+        } else {
+            authenticateUserWithSharedPrefs()
+        }
     }
 
     private fun authenticateUserWithServer(email: String, hashedPassword: String) {
@@ -79,9 +75,21 @@ class LoginActivity : AppCompatActivity() {
             }
         """.trimIndent()
 
+
         val requestBody = jsonBody.toRequestBody(jsonMediaType)
+
+        Log.e("TEST", jsonBody);
+        Log.e("TEST", requestBody.toString());
+
+        val dotenv = dotenv {
+            directory = "./assets"
+            filename = "env" // instead of '.env', use 'env'
+        }
+        val apiHost = dotenv.get("API_HOST")
+        val apiPort = dotenv.get("API_PORT")
+
         val request = Request.Builder()
-            .url("http://localhost:6000/api/user/login")
+            .url("http://$apiHost:$apiPort/api/user/login")
             .post(requestBody)
             .build()
 
