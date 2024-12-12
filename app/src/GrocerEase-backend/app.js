@@ -6,9 +6,8 @@ const authRoutes = require('./routes/user');
 
 const app = express();
 
-const MONGODB_URI = "mongodb+srv://user:IigChwsYtIpq8R21@cluster0.o50mfr6.mongodb.net/?retryWrites=true&w=majority&appName=Cluster"; // Vstavi mongodb link
-
-const PORT = 5000; 
+const MONGODB_URI = "mongodb+srv://user:IigChwsYtIpq8R21@cluster0.o50mfr6.mongodb.net/grocerease?retryWrites=true&w=majority";
+const PORT = 6000;
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -21,4 +20,3 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true 
 
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-24

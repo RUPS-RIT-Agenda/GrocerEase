@@ -61,11 +61,11 @@ class LoginActivity : AppCompatActivity() {
         // Hash the password before sending it to the backend
         val hashedPassword = hashPassword(password)
 
-        if (isInternetAvailable()) {
-            authenticateUserWithServer(email, hashedPassword)
-        } else {
-            authenticateUserWithSharedPrefs()
-        }
+//        if (isInternetAvailable()) {
+//            authenticateUserWithServer(email, hashedPassword)
+//        } else {
+//            authenticateUserWithSharedPrefs()
+//        }
     }
 
     private fun authenticateUserWithServer(email: String, hashedPassword: String) {
@@ -81,7 +81,7 @@ class LoginActivity : AppCompatActivity() {
 
         val requestBody = jsonBody.toRequestBody(jsonMediaType)
         val request = Request.Builder()
-            .url("http://204.216.219.141:5000/api/user/login")
+            .url("http://localhost:6000/api/user/login")
             .post(requestBody)
             .build()
 

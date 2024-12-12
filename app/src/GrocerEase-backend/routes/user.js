@@ -5,6 +5,7 @@ const User = require('../models/User');
 const router = express.Router();
 
 router.post('/register', async (req, res) => {
+    console.log("kdsjdfkgkdgfj");
     const { username, email, password, profile_image } = req.body;
     console.log("REGISTER API..");
     console.log(req.body);
