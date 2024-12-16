@@ -60,12 +60,14 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="addListOnClick"
-        android:text="+"
-        android:textSize="34sp"
+        android:text="New list"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toTopOf="@+id/guideline" />
+
+
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"
