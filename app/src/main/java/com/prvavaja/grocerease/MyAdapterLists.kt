@@ -53,7 +53,7 @@ class MyAdapterLists(val app: MyApplication) :
 
     private fun showDeleteConfirmationDialog(context: Context, position: Int) {
         if(app.listOfgrocerylists.getAllLists()[position].items.size >= 1){
-            Toast.makeText(context, "You can't delete lists that have items in it", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "You can't delete shopping lists that have items in it", Toast.LENGTH_SHORT).show()
             return
         }
         val alertDialogBuilder = AlertDialog.Builder(context)

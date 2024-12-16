@@ -37,7 +37,7 @@ class ListsActivity : AppCompatActivity() {
         finish()
     }
 
-    fun addListOnClick(view: View){
+    fun addListOnClick(view: View) {
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.add_list_dialog, null)
@@ -47,18 +47,35 @@ class ListsActivity : AppCompatActivity() {
         val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
         val today = LocalDateTime.now().format(formatter)
 
-        with(builder){
+        // Confirmation Dialog for List Creation
+        val confirmBuilder = AlertDialog.Builder(this)
+
+        with(builder) {
             setTitle("Name the new list:")
-            setPositiveButton("OK"){dialog, which ->
-                app.listOfgrocerylists.addList(GroceryList(addListNameET.text.toString(), today))
-                recyclerView.adapter?.notifyItemInserted(app.listOfgrocerylists.size()-1)
-                serialization.addInfo(app.listOfgrocerylists.getLastList())
+            setPositiveButton("OK") { dialog, _ ->
+                val listName = addListNameET.text.toString().trim()
+                if (listName.isNotEmpty()) {
+                    confirmBuilder.setTitle("Confirm")
+                        .setMessage("Are you sure you want to create a new Shopping list named \"$listName\"?")
+                        .setPositiveButton("Yes") { _, _ ->
+                            app.listOfgrocerylists.addList(GroceryList(listName, today))
+                            recyclerView.adapter?.notifyItemInserted(app.listOfgrocerylists.size() - 1)
+                            serialization.addInfo(app.listOfgrocerylists.getLastList())
+                        }
+                        .setNegativeButton("Cancel") { _, _ ->
+                            Log.d("Lists", "List creation canceled!")
+                        }
+                    confirmBuilder.create().show()
+                } else {
+                    Log.d("Lists", "List name is empty, not creating!")
+                }
             }
-            setNegativeButton("Cancel"){dialog, which ->
+            setNegativeButton("Cancel") { dialog, _ ->
                 Log.d("Lists", "Adding a list canceled!")
             }
             setView(dialogLayout)
             show()
         }
     }
+
 }
