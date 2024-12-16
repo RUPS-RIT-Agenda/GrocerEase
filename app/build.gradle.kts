@@ -51,6 +51,7 @@ dependencies {
     implementation("androidx.activity:activity:1.8.0")
     testImplementation("junit:junit:4.13.2")
     implementation("androidx.core:core-splashscreen:1.0.0")
+    implementation("io.github.cdimascio:dotenv-kotlin:6.5.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     implementation("org.osmdroid:osmdroid-android:6.1.17")
     implementation("com.github.bumptech.glide:glide:4.15.0")
@@ -60,5 +61,4 @@ dependencies {
     implementation("com.google.crypto.tink:tink-android:1.7.0")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-    implementation("io.github.cdimascio:dotenv-kotlin:6.4.2")
 }
