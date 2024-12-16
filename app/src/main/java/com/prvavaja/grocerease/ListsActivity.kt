@@ -56,7 +56,7 @@ class ListsActivity : AppCompatActivity() {
                 val listName = addListNameET.text.toString().trim()
                 if (listName.isNotEmpty()) {
                     confirmBuilder.setTitle("Confirm")
-                        .setMessage("Are you sure you want to create a new list named \"$listName\"?")
+                        .setMessage("Are you sure you want to create a new Shopping list named \"$listName\"?")
                         .setPositiveButton("Yes") { _, _ ->
                             app.listOfgrocerylists.addList(GroceryList(listName, today))
                             recyclerView.adapter?.notifyItemInserted(app.listOfgrocerylists.size() - 1)
