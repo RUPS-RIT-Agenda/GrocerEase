@@ -94,14 +94,12 @@ class RegisterActivity : AppCompatActivity() {
             return
         }
 
-        val hashedPassword = hashPassword(password)
-
         // Save data to SharedPreferences
         val sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.putString("username", username)
         editor.putString("email", email)
-        editor.putString("password", hashedPassword)
+        editor.putString("password", password)
         editor.putString("profile_image", imageUri.toString())
         editor.apply()
 
@@ -113,7 +111,7 @@ class RegisterActivity : AppCompatActivity() {
             {
                 "username": "$username",
                 "email": "$email",
-                "password": "$hashedPassword",
+                "password": "$password",
                 "profile_image": "${imageUri.toString()}"
             }
         """.trimIndent()
