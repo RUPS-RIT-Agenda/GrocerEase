@@ -1,4 +1,4 @@
-package com.prvavaja.grocerease
+package com.prvavaja.grocerease.model
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.KSerializer
@@ -7,9 +7,9 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 
 import java.util.UUID
-//seraliziran razred za vsak izdelek na nakupovalnem listu
+
 @Serializable
-class Item(var itemName:String,var store:String,var amount:String, var checked:Boolean = false, var note:String="") {//konstruktor
+class Item(var name: String, var description: String, var subcategory: String, var company: String) {
     @Serializable(with = UUIDSerializer::class)
     var uuid: UUID = UUID.randomUUID()
 
@@ -25,9 +25,9 @@ class Item(var itemName:String,var store:String,var amount:String, var checked:B
     }
 
     override fun toString(): String {
-        return "item, Name: "+itemName + "UUID: " + uuid +" Store: "+ store+" Amaunt: "+amount + " Note: "+ note + " Checked: "+checked.toString()
+        return "item, Name: " + name + "UUID: " + uuid +" Company: "+ company + " Description: "+ description + " Subcategory: " + subcategory
     }
-    object UUIDSerializer : KSerializer<UUID> {//posebej serializacija za uuid
+    object UUIDSerializer : KSerializer<UUID> {
         override val descriptor = PrimitiveSerialDescriptor("UUID", PrimitiveKind.STRING)
         override fun deserialize(decoder: Decoder): UUID {
             return UUID.fromString(decoder.decodeString())
@@ -36,7 +36,6 @@ class Item(var itemName:String,var store:String,var amount:String, var checked:B
         override fun serialize(encoder: kotlinx.serialization.encoding.Encoder, value: UUID) {
             encoder.encodeString(value.toString())
         }
-
 
     }
 }

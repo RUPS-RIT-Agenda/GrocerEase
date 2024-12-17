@@ -1,6 +1,5 @@
-package com.prvavaja.grocerease
+package com.prvavaja.grocerease.model
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -10,18 +9,18 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.prvavaja.grocerease.MyApplication
+import com.prvavaja.grocerease.R
+import com.prvavaja.grocerease.SingleListActivity
 
 class MyAdapterLists(val app: MyApplication) :
     RecyclerView.Adapter<MyAdapterLists.MyViewHolder>() {
+
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val listNameTV: TextView
-        val numOfItemsTV: TextView
-        val createdTV: TextView
-        init{
-            listNameTV = itemView.findViewById(R.id.listNameTV)
-            numOfItemsTV = itemView.findViewById(R.id.numOfItemsTV)
-            createdTV = itemView.findViewById(R.id.createdTV)
-        }
+        val listNameTV: TextView = itemView.findViewById(R.id.listNameTV)
+        val storeNameTV: TextView = itemView.findViewById(R.id.storeNameTV)
+        val numOfItemsTV: TextView = itemView.findViewById(R.id.numOfItemsTV)
+        val createdTV: TextView = itemView.findViewById(R.id.createdTV)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -33,6 +32,7 @@ class MyAdapterLists(val app: MyApplication) :
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val current = app.listOfgrocerylists.getAllLists()[position]
         holder.listNameTV.text = current.listName
+        holder.storeNameTV.text = "List for store: ${current.company}"
         holder.numOfItemsTV.text = current.items.size.toString()
         holder.createdTV.text = current.date
 

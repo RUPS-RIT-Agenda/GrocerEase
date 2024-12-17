@@ -1,6 +1,5 @@
 package com.prvavaja.grocerease
 
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -8,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.prvavaja.grocerease.model.Serialization
 
 class MyAdapterItems(val app: MyApplication) :
 
@@ -27,8 +26,6 @@ class MyAdapterItems(val app: MyApplication) :
 
     }
 
-
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_list, parent, false)
@@ -37,12 +34,7 @@ class MyAdapterItems(val app: MyApplication) :
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val current = app.currentList.items[position]
-        holder.itemNameTV.text = current.itemName
-        holder.amountTV.text = current.amount
-
-        holder.checkBoxIV.setImageResource(
-            if (current.checked) R.drawable.checkbox_circle else R.drawable.checkbox_blank_circle
-        )
+        holder.itemNameTV.text = current.name
 
         holder.itemView.setOnLongClickListener {
             changeCheckItem(holder, position)
@@ -61,10 +53,6 @@ class MyAdapterItems(val app: MyApplication) :
 
     private fun changeCheckItem(holder: MyViewHolder, position: Int) {
         val current = app.currentList.items[position]
-        current.checked = !current.checked
-        holder.checkBoxIV.setImageResource(
-            if (current.checked) R.drawable.checkbox_circle else R.drawable.checkbox_blank_circle
-        )
 
         val serialization = Serialization(holder.itemView.context)
         serialization.updateInfo(app.currentList.uuid,app.currentList)

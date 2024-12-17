@@ -3,11 +3,11 @@ package com.prvavaja.grocerease
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.prvavaja.grocerease.databinding.ActivitySingleListBinding
+import com.prvavaja.grocerease.model.GroceryList
+import com.prvavaja.grocerease.model.Item
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -35,11 +35,11 @@ class SingleListActivity : AppCompatActivity() {
             val today = LocalDateTime.now().format(formatter)
             val allLists = app.listOfgrocerylists.getAllLists()
 
-            app.currentList = GroceryList(storeName, today)
+            app.currentList = GroceryList(storeName, today, storeName)
 
             for (list in allLists) {
                 for (item in list.items) {
-                    if (item.store == storeName) {
+                    if (item.company == storeName) {
                         app.currentList.addItem(item)
                     }
                 }
@@ -66,7 +66,7 @@ class SingleListActivity : AppCompatActivity() {
 
     fun addOnClick(view: View) {
         val intent = Intent(this, AddEditItemActivity::class.java)
-        app.currentItem = Item("", "", "")
+        app.currentItem = Item("", "", "", "")
         app.currentList.addItem(app.currentItem)
         startActivity(intent)
     }

@@ -1,4 +1,4 @@
-package com.prvavaja.grocerease
+package com.prvavaja.grocerease.model
 
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json

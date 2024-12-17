@@ -1,4 +1,4 @@
-package com.prvavaja.grocerease
+package com.prvavaja.grocerease.model
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.KSerializer
@@ -8,12 +8,10 @@ import kotlinx.serialization.encoding.Decoder
 
 import java.util.UUID
 
-//seraliziran class za nakupovalni seznam
 @Serializable
-class GroceryList(var listName:String, var date:String, var items: MutableList<Item> = mutableListOf()) {//konstruktor
+class GroceryList(var listName:String, var date:String, var company:String, var items: MutableList<Item> = mutableListOf()) {//konstruktor
     @Serializable(with = UUIDSerializer::class)
     var uuid: UUID = UUID.randomUUID()
-
 
     override fun equals(other: Any?): Boolean {//primerjnje po uuid dveh listov
         if (this === other) return true
@@ -27,9 +25,9 @@ class GroceryList(var listName:String, var date:String, var items: MutableList<I
     }
 
     override fun toString(): String {
-        return "Grocery list, name: " + listName+ "UUID:" +uuid +" Items: "+ items.toString()
+        return "Grocery list, name: " + listName+ "UUID:" +uuid + " Store: " + company + " Items: "+ items.toString()
     }
-    object UUIDSerializer : KSerializer<UUID> {//posebej seralizacija za uuid
+    object UUIDSerializer : KSerializer<UUID> {
         override val descriptor = PrimitiveSerialDescriptor("UUID", PrimitiveKind.STRING)
         override fun deserialize(decoder: Decoder): UUID {
             return UUID.fromString(decoder.decodeString())
@@ -39,9 +37,8 @@ class GroceryList(var listName:String, var date:String, var items: MutableList<I
             encoder.encodeString(value.toString())
         }
 
-
     }
-//delo z listom itemov, metode za delo z posameznimi izdelki znotraj nakupovalnega lista
+
     fun addItem(item: Item) {
         items.add(item)
     }
@@ -66,12 +63,5 @@ class GroceryList(var listName:String, var date:String, var items: MutableList<I
         }
         return sortedItems
     }
-    fun velikost(): Int {
-        return items.size
-    }
-    fun getLastItem(): Item {
-        return items.last()
-    }
-
 
 }

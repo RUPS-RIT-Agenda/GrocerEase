@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.prvavaja.grocerease.databinding.ActivityMainBinding
+import com.prvavaja.grocerease.model.Serialization
 
 
 class MainActivity : AppCompatActivity() {

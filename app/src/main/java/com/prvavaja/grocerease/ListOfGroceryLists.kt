@@ -1,5 +1,6 @@
 package com.prvavaja.grocerease
 
+import com.prvavaja.grocerease.model.GroceryList
 import java.util.UUID
 class ListOfGroceryLists {
 

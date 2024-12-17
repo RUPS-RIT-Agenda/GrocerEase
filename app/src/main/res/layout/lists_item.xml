@@ -14,9 +14,10 @@
         android:id="@+id/imageView2"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:scaleType="centerCrop"
-        android:layout_marginEnd="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="5dp"
         android:layout_marginRight="15dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/shopping_cart" />
 
     <LinearLayout
@@ -35,6 +36,15 @@
             android:textColor="@color/myColorLight"
             android:layout_marginEnd="8dp" />
 
+        <TextView
+            android:id="@+id/storeNameTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="List for store: Mercator"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:layout_marginTop="4dp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -48,7 +58,6 @@
                 android:textSize="14sp"
                 android:textColor="@color/black"
                 android:layout_marginEnd="8dp" />
-
 
             <TextView
                 android:id="@+id/numOfItemsTV"

@@ -6,6 +6,8 @@ import android.view.View
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import com.prvavaja.grocerease.databinding.ActivityAddEditItemBinding
+import com.prvavaja.grocerease.model.MyAdapterLists
+import com.prvavaja.grocerease.model.Serialization
 
 class AddEditItemActivity : AppCompatActivity() {
 
@@ -67,20 +69,19 @@ class AddEditItemActivity : AppCompatActivity() {
 
     private fun setupUI() {
         binding.itemTitleTV.text =
-            if (app.currentItem.itemName.isEmpty()) "Add new item" else app.currentItem.itemName
+            if (app.currentItem.name.isEmpty()) "Add new item" else app.currentItem.name
     }
 
     private fun populateFields() {
-        binding.itemNameET.editText?.setText(app.currentItem.itemName)
-        binding.amountET.editText?.setText(app.currentItem.amount)
-        binding.noteET.editText?.setText(app.currentItem.note)
+        binding.itemNameET.editText?.setText(app.currentItem.name)
+        binding.noteET.editText?.setText(app.currentItem.description)
     }
 
     private fun setupStoreDropdown() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, stores)
         binding.storeDropdown.setAdapter(adapter)
 
-        val selectedStoreIndex = stores.indexOf(app.currentItem.store)
+        val selectedStoreIndex = stores.indexOf(app.currentItem.company)
         if (selectedStoreIndex >= 0) {
             binding.storeDropdown.setText(stores[selectedStoreIndex], false)
         }
@@ -96,10 +97,9 @@ class AddEditItemActivity : AppCompatActivity() {
     }
 
     fun saveOnClick(view: View) {
-        app.currentItem.itemName = binding.itemNameET.editText?.text.toString()
-        app.currentItem.amount = binding.amountET.editText?.text.toString()
-        app.currentItem.note = binding.noteET.editText?.text.toString()
-        app.currentItem.store = binding.storeDropdown.text.toString()
+        app.currentItem.name = binding.itemNameET.editText?.text.toString()
+        app.currentItem.description = binding.noteET.editText?.text.toString()
+        app.currentItem.company = binding.storeDropdown.text.toString()
 
         serialization.updateInfo(app.currentList.uuid, app.currentList)
 
