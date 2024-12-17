@@ -1,110 +1,135 @@
 package com.prvavaja.grocerease
 
-import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.prvavaja.grocerease.databinding.ActivityAddEditItemBinding
-import com.prvavaja.grocerease.model.MyAdapterLists
-import com.prvavaja.grocerease.model.Serialization
+import com.prvavaja.grocerease.model.Category
+import io.github.cdimascio.dotenv.dotenv
+import okhttp3.*
+import org.json.JSONArray
+import java.io.IOException
 
 class AddEditItemActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddEditItemBinding
-    private lateinit var app: MyApplication
-    private lateinit var myAdapter: MyAdapterLists
-    private lateinit var serialization: Serialization
+    private val client = OkHttpClient()
 
-    private val stores = arrayOf(
-        "None",
-        "Mercator Market Pionirska Maribor",
-        "Poslovni sistem Mercator d.d.",
-        "Mercator Tržaška cesta",
-        "Mercator Center",
-        "Mercator Puhova ulica",
-        "Lidl Koroška cesta",
-        "Lidl Titova cesta",
-        "Lidl Industrijska ulica",
-        "Lidl Ulica I. Internacionale",
-        "Lidl Tržaška cesta",
-        "Lidl Ulica Veljka Vlahoviča",
-        "Lidl Ptujska cesta",
-        "Lidl Slivniška cesta",
-        "Hofer Vodnikov trg",
-        "Hofer Linhartova Ulica",
-        "Hofer Slovenija",
-        "Hofer Koroška cesta",
-        "Hofer Ulica Veljka Vlahovića",
-        "Hofer Šentiljska cesta",
-        "Hofer Cesta proletarskih brigad",
-        "Hofer Ptujska cesta",
-        "Hofer Lenart",
-        "Supermarket Spar Trg Svobode",
-        "Supermarket Spar Žolgarjeva ulica",
-        "InterSpar Pobreška cesta",
-        "Hipermarket Spar Ulica Veljka Vlahoviča",
-        "Restavracije InterSpar Pobreška cesta",
-        "Supermarket Spar Prvomajska ulica",
-        "Spar C. prolet. brigad",
-        "Supermarket Spar Ptujska cesta"
-    )
+    private var categories: List<Category> = emptyList()
+    private val subcategoriesMap = mutableMapOf<String, List<String>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityAddEditItemBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        app = application as MyApplication
-        myAdapter = MyAdapterLists(app)
-        serialization = Serialization(this)
+        binding.subcategoryMenu.visibility = View.GONE
 
-        setupUI()
-
-        populateFields()
-
-        setupStoreDropdown()
+        fetchCategoriesFromServer()
     }
 
-    private fun setupUI() {
-        binding.itemTitleTV.text =
-            if (app.currentItem.name.isEmpty()) "Add new item" else app.currentItem.name
+    private fun fetchCategoriesFromServer() {
+        val dotenv = dotenv {
+            directory = "./assets"
+            filename = "env"
+        }
+        val apiHost = dotenv.get("API_HOST")
+        val apiPort = dotenv.get("API_PORT")
+
+        val request = Request.Builder()
+            .url("http://$apiHost:$apiPort/api/category")
+            .get()
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("AddEditItemActivity", "Failed to fetch categories: ${e.message}")
+                runOnUiThread {
+                    Toast.makeText(this@AddEditItemActivity, "Error fetching categories", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    response.body?.let { responseBody ->
+                        val jsonString = responseBody.string()
+                        categories = parseCategoriesFromJson(jsonString)
+
+                        categories.forEach { category ->
+                            subcategoriesMap[category.name] = category.subcategories
+                        }
+
+                        runOnUiThread {
+                            setupCategoryDropdown()
+                        }
+                    }
+                } else {
+                    Log.e("AddEditItemActivity", "Error response: ${response.message}")
+                    runOnUiThread {
+                        Toast.makeText(this@AddEditItemActivity, "Error fetching categories", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        })
     }
 
-    private fun populateFields() {
-        binding.itemNameET.editText?.setText(app.currentItem.name)
-        binding.noteET.editText?.setText(app.currentItem.description)
+    private fun parseCategoriesFromJson(jsonString: String): List<Category> {
+        val categories = mutableListOf<Category>()
+        try {
+            val jsonArray = JSONArray(jsonString)
+            for (i in 0 until jsonArray.length()) {
+                val jsonObject = jsonArray.getJSONObject(i)
+                val name = jsonObject.getString("name")
+                val subcategoriesJsonArray = jsonObject.getJSONArray("subcategories")
+                val subcategories = mutableListOf<String>()
+
+                for (j in 0 until subcategoriesJsonArray.length()) {
+                    subcategories.add(subcategoriesJsonArray.getString(j))
+                }
+
+                categories.add(Category(name, subcategories))
+            }
+        } catch (e: Exception) {
+            Log.e("AddEditItemActivity", "Error parsing JSON: ${e.message}")
+        }
+        return categories
     }
 
-    private fun setupStoreDropdown() {
-        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, stores)
-        binding.storeDropdown.setAdapter(adapter)
+    private fun setupCategoryDropdown() {
+        val categoryNames = categories.map { it.name }
+        val categoryAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, categoryNames)
 
-        val selectedStoreIndex = stores.indexOf(app.currentItem.company)
-        if (selectedStoreIndex >= 0) {
-            binding.storeDropdown.setText(stores[selectedStoreIndex], false)
+        val categoryDropdown = findViewById<AutoCompleteTextView>(R.id.categoryDropdown)
+        categoryDropdown.setAdapter(categoryAdapter)
+
+        categoryDropdown.setOnItemClickListener { _, _, position, _ ->
+            val selectedCategory = categories[position]
+            val subcategories = selectedCategory.subcategories
+
+            if (subcategories.isNotEmpty()) {
+                setupSubcategoryDropdown(subcategories)
+                binding.subcategoryMenu.visibility = View.VISIBLE
+            } else {
+                binding.subcategoryMenu.visibility = View.GONE
+                resetSubcategoryDropdown()
+            }
         }
     }
 
-    fun deleteOnClick(view: View) {
-        app.currentList.removeItem(app.currentItem.uuid)
-        serialization.updateInfo(app.currentList.uuid, app.currentList)
-
-        val intent = Intent(this, SingleListActivity::class.java)
-        startActivity(intent)
-        finish()
+    private fun setupSubcategoryDropdown(subcategories: List<String>) {
+        val subcategoryDropdown = findViewById<AutoCompleteTextView>(R.id.subcategoryDropdown)
+        val subcategoryAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, subcategories)
+        subcategoryDropdown.setAdapter(subcategoryAdapter)
+        subcategoryDropdown.setText("")
     }
 
-    fun saveOnClick(view: View) {
-        app.currentItem.name = binding.itemNameET.editText?.text.toString()
-        app.currentItem.description = binding.noteET.editText?.text.toString()
-        app.currentItem.company = binding.storeDropdown.text.toString()
-
-        serialization.updateInfo(app.currentList.uuid, app.currentList)
-
-        val intent = Intent(this, SingleListActivity::class.java)
-        startActivity(intent)
-        finish()
+    private fun resetSubcategoryDropdown() {
+        val subcategoryDropdown = findViewById<AutoCompleteTextView>(R.id.subcategoryDropdown)
+        subcategoryDropdown.setText("")
+        subcategoryDropdown.setAdapter(null)
     }
 }
