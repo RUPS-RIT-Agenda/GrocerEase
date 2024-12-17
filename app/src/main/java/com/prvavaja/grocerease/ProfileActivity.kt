@@ -16,26 +16,18 @@ import androidx.appcompat.app.AppCompatActivity
 import okhttp3.*
 import org.json.JSONObject
 import com.bumptech.glide.Glide
+import com.prvavaja.grocerease.databinding.ActivityProfileBinding
 import java.io.IOException
 
 class ProfileActivity : AppCompatActivity() {
 
-    private lateinit var userImage: ImageView
-    private lateinit var usernameProfile: TextView
-    private lateinit var emailProfile: TextView
-    private lateinit var btnLogout: Button
-    private lateinit var btnBack: Button
+    private lateinit var binding: ActivityProfileBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_profile)
 
-        userImage = findViewById(R.id.userImage)
-        usernameProfile = findViewById(R.id.usernameProfile)
-        emailProfile = findViewById(R.id.emailProfile)
-        btnLogout = findViewById(R.id.btnLogout)
-        btnBack= findViewById(R.id.btnBack)
-
+        binding = ActivityProfileBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         if (isInternetAvailable()) {
             loadUserDataFromServer()
@@ -43,11 +35,11 @@ class ProfileActivity : AppCompatActivity() {
             loadUserDataFromSharedPrefs()
         }
 
-        btnLogout.setOnClickListener {
+        binding.btnLogout.setOnClickListener {
             logoutUser()
         }
 
-        btnBack.setOnClickListener {
+        binding.btnBack.setOnClickListener {
             val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
         }
@@ -58,15 +50,14 @@ class ProfileActivity : AppCompatActivity() {
         val username = sharedPreferences.getString("username", "N/A") ?: "N/A"
         val email = sharedPreferences.getString("email", "N/A") ?: "N/A"
 
-        // Set the user data in TextViews
-        usernameProfile.text = "Username: $username"
-        emailProfile.text = "Email: $email"
+        binding.usernameProfile.text = "Username: $username"
+        binding.emailProfile.text = "Email: $email"
 
         val imageUriString = sharedPreferences.getString("profile_image", null)
         if (imageUriString != null) {
             loadImageFromUri(Uri.parse(imageUriString))
         } else {
-            userImage.setImageResource(R.drawable.profile)
+            binding.userImage.setImageResource(R.drawable.profile)
         }
     }
 
@@ -109,8 +100,8 @@ class ProfileActivity : AppCompatActivity() {
                             val profileImageUri = jsonResponse.getString("profile_image")
 
                             runOnUiThread {
-                                usernameProfile.text = "Username: $username"
-                                emailProfile.text = "Email: $email"
+                                binding.usernameProfile.text = "Username: $username"
+                                binding.emailProfile.text = "Email: $email"
                                 loadImageFromUri(Uri.parse(profileImageUri))
                             }
                         } catch (e: Exception) {
@@ -139,19 +130,19 @@ class ProfileActivity : AppCompatActivity() {
 
                 Glide.with(this)
                     .load(it)
-                    .into(userImage)
+                    .into(binding.userImage)
 
             } catch (e: SecurityException) {
                 Log.e("ProfileActivity", "Security exception while accessing URI: ${e.message}")
                 Toast.makeText(this, "Permission error. Could not load image.", Toast.LENGTH_SHORT).show()
-                userImage.setImageResource(R.drawable.profile) // Default image on error
+                binding.userImage.setImageResource(R.drawable.profile) // Default image on error
             } catch (e: Exception) {
                 Log.e("ProfileActivity", "Error loading image: ${e.message}")
                 Toast.makeText(this, "Error loading image", Toast.LENGTH_SHORT).show()
-                userImage.setImageResource(R.drawable.profile) // Default image on error
+                binding.userImage.setImageResource(R.drawable.profile) // Default image on error
             }
         } ?: run {
-            userImage.setImageResource(R.drawable.profile)
+            binding.userImage.setImageResource(R.drawable.profile)
         }
     }
 
