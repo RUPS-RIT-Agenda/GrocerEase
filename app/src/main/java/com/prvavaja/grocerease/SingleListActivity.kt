@@ -6,6 +6,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.prvavaja.grocerease.databinding.ActivitySingleListBinding
+import com.prvavaja.grocerease.lists.MyAdapterItems
 import com.prvavaja.grocerease.model.GroceryList
 import com.prvavaja.grocerease.model.Item
 import java.time.LocalDateTime

@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.prvavaja.grocerease.model.GroceryList
 import com.prvavaja.grocerease.model.Item
+import com.prvavaja.grocerease.lists.ListOfGroceryLists
 import com.prvavaja.grocerease.model.Serialization
 
 class MyApplication : Application() {

@@ -1,4 +1,4 @@
-package com.prvavaja.grocerease
+package com.prvavaja.grocerease.lists
 
 import com.prvavaja.grocerease.model.GroceryList
 import java.util.UUID

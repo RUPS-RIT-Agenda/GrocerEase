@@ -1,4 +1,4 @@
-package com.prvavaja.grocerease.model
+package com.prvavaja.grocerease.lists
 
 import android.app.AlertDialog
 import android.content.Context
@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.prvavaja.grocerease.MyApplication
 import com.prvavaja.grocerease.R
 import com.prvavaja.grocerease.SingleListActivity
+import com.prvavaja.grocerease.model.Serialization
 
 class MyAdapterLists(val app: MyApplication) :
     RecyclerView.Adapter<MyAdapterLists.MyViewHolder>() {

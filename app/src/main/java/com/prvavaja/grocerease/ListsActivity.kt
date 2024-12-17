@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.prvavaja.grocerease.databinding.ActivityListsBinding
 import com.prvavaja.grocerease.model.GroceryList
-import com.prvavaja.grocerease.model.MyAdapterLists
+import com.prvavaja.grocerease.lists.MyAdapterLists
 import com.prvavaja.grocerease.model.Serialization
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

@@ -1,4 +1,4 @@
-package com.prvavaja.grocerease
+package com.prvavaja.grocerease.lists
 
 import android.content.Context
 import android.content.Intent
@@ -8,6 +8,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.prvavaja.grocerease.AddEditItemActivity
+import com.prvavaja.grocerease.MyApplication
+import com.prvavaja.grocerease.R
 import com.prvavaja.grocerease.model.Serialization
 
 class MyAdapterItems(val app: MyApplication) :
@@ -16,12 +19,8 @@ class MyAdapterItems(val app: MyApplication) :
 
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val itemNameTV: TextView
-        val amountTV: TextView
-        val checkBoxIV: ImageView
         init{
             itemNameTV = itemView.findViewById(R.id.itemNameTV)
-            amountTV = itemView.findViewById(R.id.amountTV)
-            checkBoxIV = itemView.findViewById(R.id.checkBoxIV)
         }
 
     }
