@@ -1,28 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
-    android:padding="10dp"
-    android:clickable="true"
+    android:padding="8dp"
     android:layout_marginBottom="8dp"
-    android:background="@drawable/border_background"
-    android:focusable="true">
+    android:background="@drawable/border_background">
 
-    <ImageView
-        android:id="@+id/checkBoxIV"
-        android:layout_width="48dp"
-        android:layout_height="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="10dp"
-        app:srcCompat="@drawable/checkbox_blank_circle" />
-
+    <!-- Content Section: Name and Description -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical">
+
 
         <TextView
             android:id="@+id/itemNameTV"
@@ -31,32 +23,24 @@
             android:text="Item Name"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/myColorLight"
-            android:layout_marginEnd="8dp" />
+            android:textColor="@android:color/black" />
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/storeNameTV"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/amountLabelTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Amount:"
-                android:textSize="14sp"
-                android:textColor="@color/black"
-                android:layout_marginEnd="8dp" />
-
-            <TextView
-                android:id="@+id/amountTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1"
-                android:textSize="14sp"
-                android:textColor="@color/black" />
-        </LinearLayout>
-
+            android:text="Item Description"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray"
+            android:layout_marginTop="4dp" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/addItemIV"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="8dp"
+        android:src="@drawable/baseline_add_box_24"
+        android:contentDescription="Add Item" />
 </LinearLayout>
