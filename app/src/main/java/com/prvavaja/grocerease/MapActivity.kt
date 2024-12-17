@@ -14,6 +14,7 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import android.widget.ArrayAdapter
 import android.widget.AdapterView
+import android.widget.AutoCompleteTextView
 import android.widget.Spinner
 import android.widget.Toast
 
@@ -65,88 +66,53 @@ class MapActivity : AppCompatActivity() {
 
         )
     )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMapBinding.inflate(layoutInflater) //ADD THIS LINE
+        binding = ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //dropdown menue-spinner
-        val categorySpinner = findViewById<Spinner>(R.id.categorySpinner)
-
-// Set up an adapter for the Spinner (if not using static entries in XML)
-        val adapter = ArrayAdapter.createFromResource(
+        val categoryDropdown = findViewById<AutoCompleteTextView>(R.id.categoryDropdown)
+        val categoryAdapter = ArrayAdapter(
             this,
-            R.array.category_array,
-            android.R.layout.simple_spinner_item
+            android.R.layout.simple_dropdown_item_1line,
+            markerCategories.keys.toList()
         )
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        categorySpinner.adapter = adapter
+        categoryDropdown.setAdapter(categoryAdapter)
 
+        categoryDropdown.setOnItemClickListener { _, _, position, _ ->
+            val selectedCategory = markerCategories.keys.toList()[position]
+            curentStore = selectedCategory
+            displayMarkers(selectedCategory)
 
-
+            // Center map after selection
+            val mapController = mapView.controller
+            mapController.setZoom(14)
+            val defaultLocation = GeoPoint(46.5547, 15.6459) // Adjust coordinates as needed
+            mapController.setCenter(defaultLocation)
+        }
 
         // Set up osmdroid configuration
-        Configuration.getInstance().load(applicationContext,this.getPreferences(Context.MODE_PRIVATE))
+        Configuration.getInstance().load(applicationContext, getPreferences(Context.MODE_PRIVATE))
         mapView = binding.map
         mapView.setTileSource(TileSourceFactory.MAPNIK)
         mapView.setMultiTouchControls(true)
+
         val mapController = mapView.controller
         mapController.setZoom(14)
-        val defaultLocation = GeoPoint(46.5547, 15.6459) // Adjust coordinates as needed
+        val defaultLocation = GeoPoint(46.5547, 15.6459)
         mapController.setCenter(defaultLocation)
-
-        // Listen for changes on the Spinner
-        categorySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                val selectedCategory = parent.getItemAtPosition(position).toString()
-                curentStore=selectedCategory
-                // Update the markers based on the selected category
-                displayMarkers(selectedCategory)
-                mapController.setZoom(14)
-                val defaultLocation = GeoPoint(46.5547, 15.6459) // Adjust coordinates as needed
-                mapController.setCenter(defaultLocation)
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {}
-        }
-
-        /*// Add a marker mercator
-        val markerM1 = Marker(mapView)
-        markerM1.position = GeoPoint(46.560608, 15.651450)
-        markerM1.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-        markerM1.title = "Mercator Market Pionirska Maribor"
-        mapView.overlays.add(markerM1)
-
-        val markerM2 = Marker(mapView)
-        markerM2.position = GeoPoint(46.558662, 15.650357)
-        markerM2.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-        markerM2.title = "Poslovni sistem Mercator d.d."
-        mapView.overlays.add(markerM2)
-
-        val markerM3 = Marker(mapView)
-        markerM3.position = GeoPoint(46.540264, 15.645581)
-        markerM3.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-        markerM3.title = "Mercator"
-        mapView.overlays.add(markerM3)
-
-        val markerM4 = Marker(mapView)
-        markerM4.position = GeoPoint(46.539688, 15.640756)
-        markerM4.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-        markerM4.title = "Mercator Center"
-        mapView.overlays.add(markerM4)*/
-
     }
 
-    fun filterOnClick(view: View){
-        if (selectedStore!="") {
+    fun filterOnClick(view: View) {
+        if (selectedStore.isNotEmpty()) {
             val intent = Intent(this, SingleListActivity::class.java)
             intent.putExtra("STORE_NAME", binding.selectedStoreTV.text.toString())
             intent.putExtra("STORE", selectedStore)
             startActivity(intent)
-        }else {
+        } else {
             Toast.makeText(this, "You need to choose a store on the map.", Toast.LENGTH_SHORT).show()
         }
-
     }
 
     fun backOnClick(view: View) {
@@ -156,33 +122,25 @@ class MapActivity : AppCompatActivity() {
     }
 
     fun displayMarkers(category: String) {
-        // Close all open info windows
         currentMarkers.forEach { it.closeInfoWindow() }
-        // Clear existing markers
         mapView.overlays.clear()
         currentMarkers.clear()
-        // Get the markers for the selected category
-        val selectedMarkers = markerCategories[category] ?: return
 
-        // Add each marker to the map
+        val selectedMarkers = markerCategories[category] ?: return
         for (markerData in selectedMarkers) {
             val marker = Marker(mapView)
             marker.position = markerData.position
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             marker.title = markerData.title
-            marker.icon=resources.getDrawable(R.drawable.marker_map_icon, null) // Use your custom icon here
-            // Set up a click listener for the marker
+            marker.icon = resources.getDrawable(R.drawable.marker_map_icon, null)
             marker.setOnMarkerClickListener { _, _ ->
-                // Update the TextView with the marker's title
-                binding.selectedStoreTV.text=markerData.title
-                selectedStore=curentStore
-                true // Return true to indicate the event was handled
+                binding.selectedStoreTV.text = markerData.title
+                selectedStore = curentStore
+                true
             }
             mapView.overlays.add(marker)
             currentMarkers.add(marker)
         }
-
-        // Refresh the map to show the new markers
         mapView.invalidate()
     }
 }

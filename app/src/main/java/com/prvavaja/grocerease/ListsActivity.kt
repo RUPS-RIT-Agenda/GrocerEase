@@ -9,35 +9,44 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.prvavaja.grocerease.databinding.ActivityListsBinding
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class ListsActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityListsBinding
     lateinit var app: MyApplication
     lateinit var myAdapter: MyAdapterLists
     lateinit var serialization: Serialization
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_lists)
-        serialization = Serialization(this)
+        binding = ActivityListsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
+        serialization = Serialization(this)
         app = application as MyApplication
         myAdapter = MyAdapterLists(app)
-        val recyclerView: RecyclerView = this.findViewById(R.id.recyclerView)
-        recyclerView.setHasFixedSize(true)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = myAdapter
+
+        with(binding.recyclerView) {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(this@ListsActivity)
+            adapter = myAdapter
+        }
+
+        binding.backBTN.setOnClickListener { backOnClick() }
+        binding.btnAdd.setOnClickListener { addListOnClick() }
     }
 
-    fun backOnClick(view: View) {
+
+    private fun backOnClick() {
         val intent = Intent(this, HomeActivity::class.java)
         startActivity(intent)
         finish()
     }
 
-    fun addListOnClick(view: View) {
+    private fun addListOnClick() {
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.add_list_dialog, null)

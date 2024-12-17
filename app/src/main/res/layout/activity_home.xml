@@ -4,98 +4,102 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:windowBackground"
+    android:background="@color/onMyColorLight"
     tools:context=".MainActivity">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageView"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:padding="5dp"
-        app:contentPadding="20dp"
         android:background="@color/customYellow"
+        android:padding="5dp"
+        android:scaleType="centerInside"
+        app:contentPadding="20dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline27"
         app:layout_constraintEnd_toStartOf="@+id/guideline29"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/guideline28"
         app:layout_constraintTop_toTopOf="@+id/guideline26"
         app:layout_constraintVertical_bias="0.5"
-        android:scaleType="centerInside"
         app:shapeAppearanceOverlay="@style/Circular"
         app:srcCompat="@drawable/grocerease"
         app:strokeColor="@color/iconBack"
         app:strokeWidth="5dp" />
 
-    <Button
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/listButton"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:drawableLeft="@drawable/list_icon"
+        style="@style/FABStyleExtended"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="List Button"
         android:text="List"
-        android:textAlignment="center"
-        android:textSize="24sp"
+        android:textColor="@color/onMyColorLight"
+        app:icon="@drawable/baseline_list_24"
         app:layout_constraintBottom_toTopOf="@+id/guideline31"
         app:layout_constraintEnd_toStartOf="@+id/guideline29"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="@+id/guideline28"
-        app:layout_constraintTop_toTopOf="@+id/guideline30" />
+        app:layout_constraintTop_toTopOf="@+id/guideline30"
+        app:maxImageSize="30dp" />
 
-    <Button
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/mapButton"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:drawableLeft="@drawable/map_icon"
+        style="@style/FABStyleExtended"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="Map Button"
         android:text="Map"
-        android:textAlignment="center"
-        android:textSize="24sp"
+        android:textColor="@color/onMyColorLight"
+        app:icon="@drawable/map_icon"
         app:layout_constraintBottom_toTopOf="@+id/guideline32"
         app:layout_constraintEnd_toStartOf="@+id/guideline29"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="@+id/guideline28"
-        app:layout_constraintTop_toTopOf="@+id/guideline31" />
+        app:layout_constraintTop_toTopOf="@+id/guideline31"
+        app:maxImageSize="30dp" />
 
-    <Button
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/settingsButton"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:drawableLeft="@drawable/setings_icon"
+        style="@style/FABStyleExtended"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="Settings Button"
         android:text="Settings"
-        android:textAlignment="center"
-        android:textSize="24sp"
+        android:textColor="@color/onMyColorLight"
+        app:icon="@drawable/baseline_app_settings_alt_24"
         app:layout_constraintBottom_toTopOf="@+id/guideline33"
         app:layout_constraintEnd_toStartOf="@+id/guideline29"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="@+id/guideline28"
-        app:layout_constraintTop_toTopOf="@+id/guideline32" />
+        app:layout_constraintTop_toTopOf="@+id/guideline32"
+        app:maxImageSize="30dp" />
 
-    <Button
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/btnProfile"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:drawableLeft="@drawable/icon_profile"
+        style="@style/FABStyleExtended"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="Profile Button"
         android:text="Profile"
-        android:textAlignment="center"
-        android:textSize="24sp"
+        android:textColor="@color/onMyColorLight"
+        app:icon="@drawable/baseline_person_2_24"
         app:layout_constraintBottom_toTopOf="@+id/guideline34"
         app:layout_constraintEnd_toStartOf="@+id/guideline29"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline28"
         app:layout_constraintTop_toTopOf="@+id/guideline33"
-        app:layout_constraintVertical_bias="1.0" />
+        app:maxImageSize="30dp" />
 
-    <Button
+    <ImageButton
         android:id="@+id/btnBack"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:drawableLeft="@drawable/back_icon"
-        android:text="Back"
-        android:textAlignment="center"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline29"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="@+id/guideline28"
-        app:layout_constraintTop_toBottomOf="@+id/btnProfile" />
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
+        android:background="@null"
+        android:contentDescription="Back Button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.044"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/baseline_arrow_back_ios_new_24"
+        app:tint="@color/myColorLight" />
+
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline26"

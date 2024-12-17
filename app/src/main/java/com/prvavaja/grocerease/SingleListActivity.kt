@@ -7,56 +7,64 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.prvavaja.grocerease.databinding.ActivitySingleListBinding
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class SingleListActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySingleListBinding
     lateinit var app: MyApplication
     lateinit var myAdapter: MyAdapterItems
     lateinit var storeName: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        storeName = intent.getStringExtra("STORE_NAME").toString()
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_single_list)
 
+        binding = ActivitySingleListBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        storeName = intent.getStringExtra("STORE_NAME").toString()
         app = application as MyApplication
         myAdapter = MyAdapterItems(app)
-        val recyclerView: RecyclerView = this.findViewById(R.id.itemsRV)
-        recyclerView.setHasFixedSize(true)
-        recyclerView.layoutManager = LinearLayoutManager(this)
 
-        val singleListTitleTV: TextView = this.findViewById(R.id.singleListTitleTV)
-        if(storeName != "null"){
+        binding.itemsRV.setHasFixedSize(true)
+        binding.itemsRV.layoutManager = LinearLayoutManager(this)
+
+        if (storeName != "null") {
             val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
             val today = LocalDateTime.now().format(formatter)
             val allLists = app.listOfgrocerylists.getAllLists()
+
             app.currentList = GroceryList(storeName, today)
-            for(l in allLists){
-                for(i in l.items){
-                    if(i.store == storeName){
-                        app.currentList.addItem(i)
+
+            for (list in allLists) {
+                for (item in list.items) {
+                    if (item.store == storeName) {
+                        app.currentList.addItem(item)
                     }
                 }
             }
         }
-        singleListTitleTV.text = app.currentList.listName
-        recyclerView.adapter = myAdapter
+
+        binding.singleListTitleTV.text = app.currentList.listName
+        binding.itemsRV.adapter = myAdapter
+
+        binding.button.setOnClickListener { backOnClick(it) }
+        binding.button2.setOnClickListener { addOnClick(it) }
     }
 
+
     fun backOnClick(view: View) {
-        if(storeName != "null"){
-            val intent = Intent(this, MapActivity::class.java)
-            startActivity(intent)
+        val intent = if (storeName != "null") {
+            Intent(this, MapActivity::class.java)
+        } else {
+            Intent(this, ListsActivity::class.java)
         }
-        else{
-            val intent = Intent(this, ListsActivity::class.java)
-            startActivity(intent)
-        }
+        startActivity(intent)
         finish()
     }
 
-    fun addOnClick(view: View){
+    fun addOnClick(view: View) {
         val intent = Intent(this, AddEditItemActivity::class.java)
         app.currentItem = Item("", "", "")
         app.currentList.addItem(app.currentItem)
