@@ -31,8 +31,27 @@ router.post('/create-empty-list', async (req, res) => {
 router.get('/usersLists/:userID', async (req, res) => {
     try {
         const { userID } = req.params;
+        const { filterBy } = req.query;
 
-        const userLists = await List.find({ userID }).exec();
+        let filter;
+
+        // Check if the userID is a valid ObjectId and use it appropriately
+        if (mongoose.isValidObjectId(userID)) {
+            filter = { userID: new mongoose.Types.ObjectId(userID) };
+        } else {
+            filter = { userID }; // Treat as a string if not an ObjectId
+        }
+
+        if (filterBy === 'bought') {
+            filter['listOfItems.bought'] = true;
+        } else if (filterBy) {
+            filter.company = filterBy; // Filter by store (company)
+        }
+
+        // Retrieve filtered lists
+        const userLists = await List.find(filter)
+            .sort(filterBy === 'created' ? { date: -1 } : {})
+            .exec();
 
         if (!userLists.length) {
             return res.status(404).json({ message: 'No lists found for this user' });
@@ -40,9 +59,11 @@ router.get('/usersLists/:userID', async (req, res) => {
 
         res.status(200).json({ message: 'User lists retrieved successfully', lists: userLists });
     } catch (error) {
+        console.error('Error retrieving user lists:', error);
         res.status(500).json({ message: 'Error retrieving user lists', error });
     }
 });
+
 
 router.post('/:listId/add-item', async (req, res) => {
     try {
@@ -87,6 +108,22 @@ router.patch('/:listId/update-item/:itemId', async (req, res) => {
         res.status(200).json({ message: 'Item updated successfully', list: updatedList });
     } catch (error) {
         res.status(500).json({ message: 'Error updating item', error });
+    }
+});
+
+router.delete('/:listId', async (req, res) => {
+    try {
+        const { listId } = req.params;
+
+        const deletedList = await List.findByIdAndDelete(listId);
+
+        if (!deletedList) {
+            return res.status(404).json({ message: 'List not found' });
+        }
+
+        res.status(200).json({ message: 'List deleted successfully', list: deletedList });
+    } catch (error) {
+        res.status(500).json({ message: 'Error deleting list', error });
     }
 });
 
