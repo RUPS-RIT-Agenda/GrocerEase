@@ -35,22 +35,21 @@ router.get('/usersLists/:userID', async (req, res) => {
 
         let filter;
 
-        // Check if the userID is a valid ObjectId and use it appropriately
         if (mongoose.isValidObjectId(userID)) {
             filter = { userID: new mongoose.Types.ObjectId(userID) };
         } else {
-            filter = { userID }; // Treat as a string if not an ObjectId
+            filter = { userID };
         }
 
         if (filterBy === 'bought') {
             filter['listOfItems.bought'] = true;
         } else if (filterBy) {
-            filter.company = filterBy; // Filter by store (company)
+            filter.company = filterBy;
         }
 
-        // Retrieve filtered lists
         const userLists = await List.find(filter)
             .sort(filterBy === 'created' ? { date: -1 } : {})
+            .populate('listOfItems.itemId') 
             .exec();
 
         if (!userLists.length) {
@@ -63,7 +62,6 @@ router.get('/usersLists/:userID', async (req, res) => {
         res.status(500).json({ message: 'Error retrieving user lists', error });
     }
 });
-
 
 router.post('/:listId/add-item', async (req, res) => {
     try {
