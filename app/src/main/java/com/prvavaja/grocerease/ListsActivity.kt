@@ -78,7 +78,7 @@ class ListsActivity : AppCompatActivity() {
                 val listName = addListNameET.text.toString().trim()
                 val selectedCompany = companySpinner.selectedItem.toString()
                 val day = datePicker.dayOfMonth
-                val month = datePicker.month + 1 // Month is 0-indexed
+                val month = datePicker.month + 1
                 val year = datePicker.year
                 val selectedDate = String.format("%02d.%02d.%04d", day, month, year)
 
@@ -95,7 +95,9 @@ class ListsActivity : AppCompatActivity() {
                             ) { createdList ->
                                 if (createdList != null) {
                                     app.listOfgrocerylists.addList(createdList)
-                                    binding.recyclerView.adapter?.notifyItemInserted(app.listOfgrocerylists.size() - 1)
+                                    runOnUiThread {
+                                        myAdapter.notifyItemInserted(app.listOfgrocerylists.size() - 1)
+                                    }
                                 } else {
                                     Log.e("Lists", "Failed to create list on backend!")
                                 }
