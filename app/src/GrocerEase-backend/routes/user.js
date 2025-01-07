@@ -19,12 +19,12 @@ router.post('/register', async (req, res) => {
             return res.status(400).json({error: "User already exists"});
         }
 
-        //const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         const user = new User({
             username,
             email,
-            password: password,
+            password: hashedPassword,
             profile_image,
         });
 
@@ -52,8 +52,9 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({error: "Invalid email or password"});
         }
 
-        // Compare the provided password with the stored password (already hashed)
-        if (password !== user.password) {
+        // Compare the provided password with the stored hashed password
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
             return res.status(400).json({error: "Invalid email or password"});
         }
 
