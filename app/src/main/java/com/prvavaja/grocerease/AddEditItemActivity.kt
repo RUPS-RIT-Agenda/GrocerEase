@@ -179,12 +179,12 @@ class AddEditItemActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     response.body?.let { responseBody ->
                         val jsonString = responseBody.string()
-                        println("Response body: $jsonString") // Print the JSON response
+                        println("Response body: $jsonString")
 
                         val items = mutableListOf<Item>()
                         try {
                             val jsonArray = JSONArray(jsonString)
-                            println("Parsed JSON Array: $jsonArray") // Debug JSON Array
+                            println("Parsed JSON Array: $jsonArray")
                             for (i in 0 until jsonArray.length()) {
                                 val jsonObject = jsonArray.getJSONObject(i)
                                 val name = jsonObject.getString("name")

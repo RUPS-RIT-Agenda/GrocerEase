@@ -1,14 +1,15 @@
 package com.prvavaja.grocerease.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 class GroceryList(
-    var listName: String,
-    var date: String,
-    var company: String,
-    var items: MutableList<ItemInList> = mutableListOf(), // Use ItemInList to match backend
-    var id: String? = null // ID from the backend
+    @SerialName("name") var listName: String,
+    @SerialName("date") var date: String,
+    @SerialName("company") var company: String,
+    @SerialName("listOfItems") var items: MutableList<ItemInList> = mutableListOf(),
+    @SerialName("_id") var id: String? = null // ID from the backend
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

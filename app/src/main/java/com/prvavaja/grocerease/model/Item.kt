@@ -1,19 +1,24 @@
 package com.prvavaja.grocerease.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
-
 import java.util.UUID
 
 @Serializable
-class Item(var name: String, var description: String, var subcategory: String, var company: String) {
+class Item(
+    @SerialName("name") var name: String,
+    @SerialName("description") var description: String,
+    @SerialName("subcategory") var subcategory: String,
+    @SerialName("company") var company: String
+) {
     @Serializable(with = UUIDSerializer::class)
     var uuid: UUID = UUID.randomUUID()
 
-    override fun equals(other: Any?): Boolean {//primerjnje po uuid dveh itemov
+    override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || javaClass != other.javaClass) return false
         val otherItem = other as Item
@@ -25,8 +30,9 @@ class Item(var name: String, var description: String, var subcategory: String, v
     }
 
     override fun toString(): String {
-        return "item, Name: " + name + "UUID: " + uuid +" Company: "+ company + " Description: "+ description + " Subcategory: " + subcategory
+        return "item, Name: $name, UUID: $uuid, Company: $company, Description: $description, Subcategory: $subcategory"
     }
+
     object UUIDSerializer : KSerializer<UUID> {
         override val descriptor = PrimitiveSerialDescriptor("UUID", PrimitiveKind.STRING)
         override fun deserialize(decoder: Decoder): UUID {
@@ -36,6 +42,5 @@ class Item(var name: String, var description: String, var subcategory: String, v
         override fun serialize(encoder: kotlinx.serialization.encoding.Encoder, value: UUID) {
             encoder.encodeString(value.toString())
         }
-
     }
 }

@@ -31,9 +31,11 @@ router.post('/create-empty-list', async (req, res) => {
 router.get('/usersLists/:userID', async (req, res) => {
     try {
         const { userID } = req.params;
-        const { filterBy } = req.query;
+        const { filterBy, raw } = req.query;
 
         let filter;
+
+        console.log("users list called");
 
         if (mongoose.isValidObjectId(userID)) {
             filter = { userID: new mongoose.Types.ObjectId(userID) };
@@ -56,12 +58,17 @@ router.get('/usersLists/:userID', async (req, res) => {
             return res.status(404).json({ message: 'No lists found for this user' });
         }
 
+        if (raw === 'true') {
+            return res.status(200).json(userLists);
+        }
+
         res.status(200).json({ message: 'User lists retrieved successfully', lists: userLists });
     } catch (error) {
         console.error('Error retrieving user lists:', error);
         res.status(500).json({ message: 'Error retrieving user lists', error });
     }
 });
+
 
 router.post('/:listId/add-item', async (req, res) => {
     try {

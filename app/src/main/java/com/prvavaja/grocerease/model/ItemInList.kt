@@ -1,14 +1,15 @@
 package com.prvavaja.grocerease.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 class ItemInList(
-    var item: Item,
-    var bought: Boolean = false,
-    var note: String? = null,
-    var quantity: String = "1",
-    var id: String? = null
+    @SerialName("itemId") var item: Item,
+    @SerialName("bought") var bought: Boolean = false,
+    @SerialName("note") var note: String? = null,
+    @SerialName("quantity") var quantity: String = "1",
+    @SerialName("_id") var id: String? = null
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

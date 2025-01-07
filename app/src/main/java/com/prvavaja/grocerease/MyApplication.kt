@@ -2,11 +2,13 @@ package com.prvavaja.grocerease
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.prvavaja.grocerease.model.GroceryList
-import com.prvavaja.grocerease.model.Item
 import com.prvavaja.grocerease.lists.ListOfGroceryLists
+import com.prvavaja.grocerease.model.BackendOperations
+import com.prvavaja.grocerease.model.GroceryList
 import com.prvavaja.grocerease.model.ItemInList
-import com.prvavaja.grocerease.model.Serialization
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MyApplication : Application() {
 
@@ -24,10 +26,12 @@ class MyApplication : Application() {
             if (isDarkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
         )
 
-        val serialization = Serialization(this)
-        val info = serialization.readInfo()
-        for (lists in info) {
-            listOfgrocerylists.addList(lists)
+        val backendOperations = BackendOperations()
+
+        // Fetch lists using coroutines
+        CoroutineScope(Dispatchers.Main).launch {
+            val fetchedLists = backendOperations.fetchGroceryLists("677d9c1c0ba26c182a42f654")
+            fetchedLists.forEach { listOfgrocerylists.addList(it) }
         }
     }
 }

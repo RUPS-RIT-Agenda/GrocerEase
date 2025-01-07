@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
+import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.Spinner
 import androidx.appcompat.app.AlertDialog
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.prvavaja.grocerease.databinding.ActivityListsBinding
 import com.prvavaja.grocerease.model.GroceryList
 import com.prvavaja.grocerease.lists.MyAdapterLists
+import com.prvavaja.grocerease.model.BackendOperations
 import com.prvavaja.grocerease.model.Serialization
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -23,6 +25,7 @@ class ListsActivity : AppCompatActivity() {
     lateinit var app: MyApplication
     lateinit var myAdapter: MyAdapterLists
     lateinit var serialization: Serialization
+    private lateinit var backendOperations: BackendOperations
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +35,8 @@ class ListsActivity : AppCompatActivity() {
         serialization = Serialization(this)
         app = application as MyApplication
         myAdapter = MyAdapterLists(app)
+
+        backendOperations = BackendOperations();
 
         with(binding.recyclerView) {
             setHasFixedSize(true)
@@ -56,7 +61,7 @@ class ListsActivity : AppCompatActivity() {
         val dialogLayout = inflater.inflate(R.layout.add_list_dialog, null)
         val addListNameET = dialogLayout.findViewById<EditText>(R.id.addListNameET)
         val companySpinner = dialogLayout.findViewById<Spinner>(R.id.companySpinner)
-        val recyclerView: RecyclerView = this.findViewById(R.id.recyclerView)
+        val datePicker = dialogLayout.findViewById<DatePicker>(R.id.datePicker)
 
         val companyAdapter = ArrayAdapter.createFromResource(
             this,
@@ -65,9 +70,6 @@ class ListsActivity : AppCompatActivity() {
         )
         companySpinner.adapter = companyAdapter
 
-        val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
-        val today = LocalDateTime.now().format(formatter)
-
         val confirmBuilder = AlertDialog.Builder(this)
 
         with(builder) {
@@ -75,14 +77,29 @@ class ListsActivity : AppCompatActivity() {
             setPositiveButton("OK") { _, _ ->
                 val listName = addListNameET.text.toString().trim()
                 val selectedCompany = companySpinner.selectedItem.toString()
+                val day = datePicker.dayOfMonth
+                val month = datePicker.month + 1 // Month is 0-indexed
+                val year = datePicker.year
+                val selectedDate = String.format("%02d.%02d.%04d", day, month, year)
 
                 if (listName.isNotEmpty()) {
                     confirmBuilder.setTitle("Confirm")
-                        .setMessage("Are you sure you want to create a new Shopping list named \"$listName\" for company \"$selectedCompany\"?")
+                        .setMessage("Are you sure you want to create a new Shopping list named \"$listName\" for company \"$selectedCompany\" on $selectedDate?")
                         .setPositiveButton("Yes") { _, _ ->
-                            app.listOfgrocerylists.addList(GroceryList(listName, today, selectedCompany))
-                            recyclerView.adapter?.notifyItemInserted(app.listOfgrocerylists.size() - 1)
-                            serialization.addInfo(app.listOfgrocerylists.getLastList())
+                            backendOperations.createList(
+                                userID = "677d9c1c0ba26c182a42f654",
+                                name = listName,
+                                company = selectedCompany,
+                                description = "A new shopping list",
+                                date = selectedDate
+                            ) { createdList ->
+                                if (createdList != null) {
+                                    app.listOfgrocerylists.addList(createdList)
+                                    binding.recyclerView.adapter?.notifyItemInserted(app.listOfgrocerylists.size() - 1)
+                                } else {
+                                    Log.e("Lists", "Failed to create list on backend!")
+                                }
+                            }
                         }
                         .setNegativeButton("Cancel") { _, _ ->
                             Log.d("Lists", "List creation canceled!")
@@ -99,5 +116,4 @@ class ListsActivity : AppCompatActivity() {
             show()
         }
     }
-
 }
