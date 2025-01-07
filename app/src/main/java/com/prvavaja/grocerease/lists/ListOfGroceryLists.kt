@@ -1,20 +1,19 @@
 package com.prvavaja.grocerease.lists
 
 import com.prvavaja.grocerease.model.GroceryList
-import java.util.UUID
 class ListOfGroceryLists {
 
     private val lists = mutableListOf<GroceryList>()
-    fun addList(list: GroceryList) {//add
+    fun addList(list: GroceryList) {
         lists.add(list)
     }
 
-    fun getList(uuid: UUID): GroceryList? {//get a specific list from grocery lists
-        return lists.find { it.uuid == uuid }
+    fun getList(id: String): GroceryList? {
+        return lists.find { it.id == id }
     }
 
-    fun updateList(updatedList: GroceryList) {//update
-        val index = lists.indexOfFirst { it.uuid == updatedList.uuid }
+    fun updateList(updatedList: GroceryList) {
+        val index = lists.indexOfFirst { it.id == updatedList.id }
         if (index != -1) {
             lists[index] = updatedList
         }

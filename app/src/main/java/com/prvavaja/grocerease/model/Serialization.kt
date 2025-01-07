@@ -32,24 +32,28 @@ class Serialization(private val context: Context) {
         saveInfo(curentInfo)
     }
 
-    fun updateInfo(uuid: UUID, updatedList: GroceryList) {
-        val curentInfo = readInfo().toMutableList()
-        val index = curentInfo.indexOfFirst { it.uuid == uuid }
+    fun updateInfo(id: String?, updatedList: GroceryList) {
+        if (id != null) {
+            val curentInfo = readInfo().toMutableList()
+            val index = curentInfo.indexOfFirst { it.id == id }
 
-        if (index != -1) {
-            println("uuid update")
-            println(updatedList)
-            curentInfo[index] = updatedList
-            saveInfo(curentInfo)
+            if (index != -1) {
+                println("id update")
+                println(updatedList)
+                curentInfo[index] = updatedList
+                saveInfo(curentInfo)
+            }
         }
     }
 
-    fun delete(uuid: UUID) {
-        val curentInfo = readInfo().toMutableList()
-        println("uuid delete")
-        println(uuid)
-        val newInfo = curentInfo.filter { it.uuid != uuid }
-        saveInfo(newInfo)
+    fun delete(id: String?) {
+        if (id != null) {
+            val curentInfo = readInfo().toMutableList()
+            println("uuid delete")
+            println(id)
+            val newInfo = curentInfo.filter { it.id != id }
+            saveInfo(newInfo)
+        }
     }
 
     fun deleteAllInfo() {

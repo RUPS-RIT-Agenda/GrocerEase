@@ -1,67 +1,50 @@
 package com.prvavaja.grocerease.model
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-
-import java.util.UUID
 
 @Serializable
-class GroceryList(var listName:String, var date:String, var company:String, var items: MutableList<Item> = mutableListOf()) {//konstruktor
-    @Serializable(with = UUIDSerializer::class)
-    var uuid: UUID = UUID.randomUUID()
-
-    override fun equals(other: Any?): Boolean {//primerjnje po uuid dveh listov
+class GroceryList(
+    var listName: String,
+    var date: String,
+    var company: String,
+    var items: MutableList<ItemInList> = mutableListOf(), // Use ItemInList to match backend
+    var id: String? = null // ID from the backend
+) {
+    override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || javaClass != other.javaClass) return false
         val otherGroceryList = other as GroceryList
-        return uuid == otherGroceryList.uuid
+        return id == otherGroceryList.id
     }
 
     override fun hashCode(): Int {
-        return uuid.hashCode()
+        return id?.hashCode() ?: 0
     }
 
     override fun toString(): String {
-        return "Grocery list, name: " + listName+ "UUID:" +uuid + " Store: " + company + " Items: "+ items.toString()
-    }
-    object UUIDSerializer : KSerializer<UUID> {
-        override val descriptor = PrimitiveSerialDescriptor("UUID", PrimitiveKind.STRING)
-        override fun deserialize(decoder: Decoder): UUID {
-            return UUID.fromString(decoder.decodeString())
-        }
-
-        override fun serialize(encoder: kotlinx.serialization.encoding.Encoder, value: UUID) {
-            encoder.encodeString(value.toString())
-        }
-
+        return "Grocery list, name: $listName, ID: $id, Store: $company, Items: $items"
     }
 
-    fun addItem(item: Item) {
+    fun addItem(item: ItemInList) {
         items.add(item)
     }
 
-    fun getItem(uuid: UUID): Item? {
-        return items.find { it.uuid == uuid }
+    fun getItem(itemId: String): ItemInList? {
+        return items.find { it.id == itemId }
     }
 
-    fun updateItem( uuid: UUID,updatedItem: Item) {
-        val index = items.indexOfFirst { it.uuid == uuid }
+    fun updateItem(itemId: String, updatedItem: ItemInList) {
+        val index = items.indexOfFirst { it.id == itemId }
         if (index != -1) {
             items[index] = updatedItem
         }
     }
-    fun removeItem(uuid: UUID) {
-        items.remove(items.find { it.uuid == uuid })
-    }
-    fun getAllItems(): List<Item> {
-        val sortedItems = items
-        for (item in sortedItems) {
-            println(item.toString())
-        }
-        return sortedItems
+
+    fun removeItem(itemId: String) {
+        items.removeIf { it.id == itemId }
     }
 
+    fun getAllItems(): List<ItemInList> {
+        return items
+    }
 }

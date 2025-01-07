@@ -33,7 +33,7 @@ class MyAdapterItems(val app: MyApplication) :
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val current = app.currentList.items[position]
-        holder.itemNameTV.text = current.name
+        holder.itemNameTV.text = current.item.name
 
         holder.itemView.setOnLongClickListener {
             changeCheckItem(holder, position)
@@ -54,7 +54,7 @@ class MyAdapterItems(val app: MyApplication) :
         val current = app.currentList.items[position]
 
         val serialization = Serialization(holder.itemView.context)
-        serialization.updateInfo(app.currentList.uuid,app.currentList)
+        serialization.updateInfo(app.currentList.id,app.currentList)
 
         notifyItemChanged(position)
     }

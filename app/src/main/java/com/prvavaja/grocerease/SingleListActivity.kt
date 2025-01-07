@@ -9,6 +9,7 @@ import com.prvavaja.grocerease.databinding.ActivitySingleListBinding
 import com.prvavaja.grocerease.lists.MyAdapterItems
 import com.prvavaja.grocerease.model.GroceryList
 import com.prvavaja.grocerease.model.Item
+import com.prvavaja.grocerease.model.ItemInList
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -39,9 +40,9 @@ class SingleListActivity : AppCompatActivity() {
             app.currentList = GroceryList(storeName, today, storeName)
 
             for (list in allLists) {
-                for (item in list.items) {
-                    if (item.company == storeName) {
-                        app.currentList.addItem(item)
+                for (i in list.items) {
+                    if (i.item.company == storeName) {
+                        app.currentList.addItem(i)
                     }
                 }
             }
@@ -67,7 +68,7 @@ class SingleListActivity : AppCompatActivity() {
 
     fun addOnClick(view: View) {
         val intent = Intent(this, AddEditItemActivity::class.java)
-        app.currentItem = Item("", "", "", "")
+        app.currentItem = ItemInList(Item("", "", "", ""),false, null, "0", "1234" );
         app.currentList.addItem(app.currentItem)
         startActivity(intent)
     }
