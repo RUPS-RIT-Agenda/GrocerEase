@@ -5,6 +5,7 @@ const cors = require('cors');
 const authRoutes = require('./routes/user');
 const itemRoutes = require('./routes/item');
 const categoryRoutes = require('./routes/category');
+const listRoutes = require('./routes/list');
 
 const app = express();
 
@@ -15,8 +16,9 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use('/api/user', authRoutes);
-app.use('/api/item', itemRoutes)
-app.use('/api/category', categoryRoutes)
+app.use('/api/item', itemRoutes);
+app.use('/api/category', categoryRoutes);
+app.use('/api/list', listRoutes);
 
 mongoose.connect(MONGODB_URI)
     .then(() => {
