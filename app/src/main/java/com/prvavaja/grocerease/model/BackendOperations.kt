@@ -6,6 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromJsonElement
+import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -133,6 +134,31 @@ class BackendOperations {
                 callback(false, e.message)
             }
         }.start()
+    }
+
+    suspend fun fetchStores(): List<Store> {
+        val url = "http://$apiHost:$apiPort/api/store"
+        val request = Request.Builder().url(url).get().build()
+
+        val json = Json { ignoreUnknownKeys = true }
+
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = client.newCall(request).execute()
+                if (response.isSuccessful) {
+                    val responseBody = response.body?.string()
+                    responseBody?.let {
+                        val jsonArray = json.parseToJsonElement(it).jsonArray
+                        json.decodeFromJsonElement<List<Store>>(jsonArray)
+                    } ?: emptyList()
+                } else {
+                    emptyList()
+                }
+            } catch (e: IOException) {
+                Log.e("BackendOperations", "Error fetching stores", e)
+                emptyList()
+            }
+        }
     }
 
 }

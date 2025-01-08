@@ -71,7 +71,6 @@ class RegisterActivity : AppCompatActivity() {
         val password = binding.passwordRegister.editText?.text.toString().trim()
         val confirmPassword = binding.confirmPasswordRegister.editText?.text.toString().trim()
 
-        // Validate input fields
         if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             Log.e("RegisterActivity", "Please fill in all fields")
             return

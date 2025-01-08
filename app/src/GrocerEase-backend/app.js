@@ -7,6 +7,7 @@ const itemRoutes = require('./routes/item');
 const categoryRoutes = require('./routes/category');
 const listRoutes = require('./routes/list');
 const cardRoutes = require('./routes/card');
+const storeRoutes = require('./routes/store');
 
 const app = express();
 
@@ -23,10 +24,13 @@ app.use('/api/item', itemRoutes);
 app.use('/api/category', categoryRoutes);
 app.use('/api/list', listRoutes);
 app.use('/api/card', cardRoutes);
+app.use('/api/store', storeRoutes);
 
-mongoose.connect(MONGODB_URI)
-    .then(() => {
-        console.log("Mongo db connected successfully");
-        app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-    })
-    .catch(err => console.error("MongoDB connection error:", err));
+mongoose.connect(MONGODB_URI, {
+    connectTimeoutMS: 10000,  // 10 seconds timeout
+})
+.then(() => {
+    console.log("Mongo db connected successfully");
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+})
+.catch(err => console.error("MongoDB connection error:", err));
