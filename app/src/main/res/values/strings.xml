@@ -7,4 +7,5 @@
         <item>Spar</item>
     </string-array>
     <string name="api_host"></string>
+    <string name="title_activity_card">CardActivity</string>
 </resources>

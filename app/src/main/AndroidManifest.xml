@@ -3,15 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera.any" />
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:name=".MyApplication"
@@ -21,10 +30,18 @@
         android:icon="@mipmap/ic_launcher_custom"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_custom_round"
-        android:usesCleartextTraffic="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.GrocerEase"
+        android:usesCleartextTraffic="true"
         tools:targetApi="32">
+        <activity
+            android:name=".CameraActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CardActivity"
+            android:exported="false"
+            android:label="@string/title_activity_card"
+            android:theme="@style/Theme.GrocerEase" />
         <activity
             android:name=".SplashScreenActivity"
             android:exported="true"
@@ -49,14 +66,12 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"/>
-
+            android:exported="true" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".HomeActivity" />
         <activity android:name=".SettingsActivity" />
-
     </application>
 
 </manifest>

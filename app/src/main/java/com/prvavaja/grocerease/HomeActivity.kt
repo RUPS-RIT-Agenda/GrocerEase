@@ -37,6 +37,11 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        binding.btnCards.setOnClickListener {
+            val intent = Intent(this, CardActivity::class.java)
+            startActivity(intent)
+        }
+
         binding.btnBack.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)

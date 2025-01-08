@@ -3,7 +3,8 @@
     <style name="Base.Theme.GrocerEase" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here -->
         <item name="colorPrimary">@color/lightGreen</item> <!-- Main button color -->
-        <item name="android:windowBackground">@drawable/background</item> <!-- Drawable for background -->
+        <item name="android:windowBackground">@drawable/background
+        </item> <!-- Drawable for background -->
     </style>
 
     <style name="Theme.GrocerEase" parent="Base.Theme.GrocerEase" />

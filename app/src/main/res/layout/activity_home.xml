@@ -35,10 +35,12 @@
         android:text="List"
         android:textColor="@color/onMyColorLight"
         app:icon="@drawable/baseline_list_24"
-        app:layout_constraintBottom_toTopOf="@+id/guideline31"
+        app:layout_constraintBottom_toTopOf="@+id/guideline30"
         app:layout_constraintEnd_toStartOf="@+id/guideline29"
+        app:layout_constraintHorizontal_bias="0.513"
         app:layout_constraintStart_toStartOf="@+id/guideline28"
-        app:layout_constraintTop_toTopOf="@+id/guideline30"
+        app:layout_constraintTop_toTopOf="@+id/guideline27"
+        app:layout_constraintVertical_bias="0.47"
         app:maxImageSize="30dp" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -50,10 +52,10 @@
         android:text="Map"
         android:textColor="@color/onMyColorLight"
         app:icon="@drawable/map_icon"
-        app:layout_constraintBottom_toTopOf="@+id/guideline32"
+        app:layout_constraintBottom_toTopOf="@+id/guideline31"
         app:layout_constraintEnd_toStartOf="@+id/guideline29"
         app:layout_constraintStart_toStartOf="@+id/guideline28"
-        app:layout_constraintTop_toTopOf="@+id/guideline31"
+        app:layout_constraintTop_toTopOf="@+id/guideline30"
         app:maxImageSize="30dp" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -65,10 +67,10 @@
         android:text="Settings"
         android:textColor="@color/onMyColorLight"
         app:icon="@drawable/baseline_app_settings_alt_24"
-        app:layout_constraintBottom_toTopOf="@+id/guideline33"
+        app:layout_constraintBottom_toTopOf="@+id/guideline32"
         app:layout_constraintEnd_toStartOf="@+id/guideline29"
         app:layout_constraintStart_toStartOf="@+id/guideline28"
-        app:layout_constraintTop_toTopOf="@+id/guideline32"
+        app:layout_constraintTop_toTopOf="@+id/guideline31"
         app:maxImageSize="30dp" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -80,10 +82,27 @@
         android:text="Profile"
         android:textColor="@color/onMyColorLight"
         app:icon="@drawable/baseline_person_2_24"
+        app:layout_constraintBottom_toTopOf="@+id/guideline33"
+        app:layout_constraintEnd_toStartOf="@+id/guideline29"
+        app:layout_constraintStart_toStartOf="@+id/guideline28"
+        app:layout_constraintTop_toTopOf="@+id/guideline32"
+        app:layout_constraintVertical_bias="0.529"
+        app:maxImageSize="30dp" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/btnCards"
+        style="@style/FABStyleExtended"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="Cards Button"
+        android:text="Cards"
+        android:textColor="@color/onMyColorLight"
+        app:icon="@drawable/baseline_credit_card_24"
         app:layout_constraintBottom_toTopOf="@+id/guideline34"
         app:layout_constraintEnd_toStartOf="@+id/guideline29"
         app:layout_constraintStart_toStartOf="@+id/guideline28"
         app:layout_constraintTop_toTopOf="@+id/guideline33"
+        app:layout_constraintVertical_bias="0.588"
         app:maxImageSize="30dp" />
 
     <ImageButton
