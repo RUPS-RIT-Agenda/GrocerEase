@@ -16,3 +16,4 @@
 local.properties
 app/.env
 node_modules
+*.log
