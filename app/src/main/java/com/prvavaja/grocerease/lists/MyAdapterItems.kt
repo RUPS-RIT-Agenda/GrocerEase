@@ -5,7 +5,6 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.prvavaja.grocerease.AddEditItemActivity
@@ -19,21 +18,25 @@ class MyAdapterItems(val app: MyApplication) :
 
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val itemNameTV: TextView
+        val quantityTV: TextView
+        val noteTV: TextView
         init{
             itemNameTV = itemView.findViewById(R.id.itemNameTV)
+            quantityTV = itemView.findViewById(R.id.quantitySetText)
+            noteTV = itemView.findViewById(R.id.noteAddingTextTV)
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_list, parent, false)
+            .inflate(R.layout.item_in_list, parent, false)
         return MyViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val current = app.currentList.items[position]
         holder.itemNameTV.text = current.item.name
+        holder.quantityTV.text =  "Quantity: ${current.quantity}"
 
         holder.itemView.setOnLongClickListener {
             changeCheckItem(holder, position)

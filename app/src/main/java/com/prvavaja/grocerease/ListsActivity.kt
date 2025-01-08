@@ -95,9 +95,7 @@ class ListsActivity : AppCompatActivity() {
                             ) { createdList ->
                                 if (createdList != null) {
                                     app.listOfgrocerylists.addList(createdList)
-                                    runOnUiThread {
-                                        myAdapter.notifyItemInserted(app.listOfgrocerylists.size() - 1)
-                                    }
+                                    binding.recyclerView.adapter?.notifyItemInserted(app.listOfgrocerylists.size() - 1)
                                 } else {
                                     Log.e("Lists", "Failed to create list on backend!")
                                 }

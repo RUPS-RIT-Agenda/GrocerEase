@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
@@ -13,8 +12,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.prvavaja.grocerease.databinding.ActivityAddEditItemBinding
 import com.prvavaja.grocerease.lists.ItemsAdapter
+import com.prvavaja.grocerease.lists.ItemsInListAdapter
+import com.prvavaja.grocerease.model.BackendOperations
 import com.prvavaja.grocerease.model.Category
 import com.prvavaja.grocerease.model.Item
+import com.prvavaja.grocerease.model.ItemInList
+import io.github.cdimascio.dotenv.dotenv
 import okhttp3.*
 import org.json.JSONArray
 import java.io.IOException
@@ -25,8 +28,11 @@ class AddEditItemActivity : AppCompatActivity() {
     private val client = OkHttpClient()
     private var categories: List<Category> = emptyList()
     private val subcategoriesMap = mutableMapOf<String, List<String>>()
-    private val itemsList = mutableListOf<Item>()
+    private val itemsList = mutableListOf<Item>() // Items from backend
+    private val itemsInList = mutableListOf<ItemInList>()
     private lateinit var itemsAdapter: ItemsAdapter
+    private lateinit var itemsInListAdapter: ItemsInListAdapter
+    private var isSearching: Boolean = false // To toggle between adapters
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,21 +45,27 @@ class AddEditItemActivity : AppCompatActivity() {
         }
 
         binding.subcategoryMenu.visibility = View.GONE
-        setupRecyclerView()
+        setupRecyclerViews()
         fetchCategoriesFromServer()
     }
 
-
-    private fun setupRecyclerView() {
+    private fun setupRecyclerViews() {
         itemsAdapter = ItemsAdapter(itemsList) { item ->
             showAddItemDialog(item)
         }
+
+        itemsInListAdapter = ItemsInListAdapter(itemsInList) {  }
+
         binding.itemsRecyclerView.layoutManager = LinearLayoutManager(this)
-        binding.itemsRecyclerView.adapter = itemsAdapter
+        binding.itemsRecyclerView.adapter = itemsInListAdapter
+    }
+
+    private fun toggleAdapter() {
+        binding.itemsRecyclerView.adapter = if (isSearching) itemsAdapter else itemsInListAdapter
     }
 
     private fun fetchCategoriesFromServer() {
-        val dotenv = io.github.cdimascio.dotenv.dotenv {
+        val dotenv = dotenv {
             directory = "./assets"
             filename = "env"
         }
@@ -112,11 +124,9 @@ class AddEditItemActivity : AppCompatActivity() {
             itemsList.clear()
             itemsAdapter.notifyDataSetChanged()
 
-            // Setup new subcategories
             setupSubcategoryDropdown(selectedCategory.subcategories)
         }
     }
-
 
     private fun showAddItemDialog(item: Item) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_add_item, null)
@@ -128,7 +138,26 @@ class AddEditItemActivity : AppCompatActivity() {
             .setPositiveButton("Add") { _, _ ->
                 val quantity = quantityInput.text.toString()
                 if (quantity.isNotEmpty()) {
-                    Toast.makeText(this, "${item.name} added with quantity: $quantity", Toast.LENGTH_SHORT).show()
+                    val listId = "677d855444e36ca6fa5a2370" // Replace with actual list ID
+                    item.id?.let { itemId ->
+                        BackendOperations().addItemToList(listId, itemId, quantity) { success, error ->
+                            runOnUiThread {
+                                if (success) {
+                                    val itemInList = ItemInList(
+                                        item = item,
+                                        quantity = quantity
+                                    )
+                                    // Add the item to itemsInList
+                                    itemsInList.add(itemInList)
+                                    itemsInListAdapter.notifyDataSetChanged()
+                                    toggleAdapter() // Switch back to added items view
+                                    Toast.makeText(this, "${item.name} added with quantity: $quantity", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    Toast.makeText(this, "Failed to add item: $error", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                    }
                 } else {
                     Toast.makeText(this, "Please enter a quantity", Toast.LENGTH_SHORT).show()
                 }
@@ -148,7 +177,10 @@ class AddEditItemActivity : AppCompatActivity() {
     }
 
     private fun fetchItemsBySubcategory(subcategory: String) {
-        val dotenv = io.github.cdimascio.dotenv.dotenv {
+        isSearching = true
+        toggleAdapter()
+
+        val dotenv = dotenv {
             directory = "./assets"
             filename = "env"
         }
@@ -156,60 +188,51 @@ class AddEditItemActivity : AppCompatActivity() {
         val apiPort = dotenv["API_PORT"]
 
         val url = "http://$apiHost:$apiPort/api/item/$subcategory"
-        println("Request URL: $url")
 
         val request = Request.Builder()
             .url(url)
             .get()
             .build()
 
-        println("Sending GET request to: $url")
-
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.e("AddEditItemActivity", "Request failed: ${e.message}")
-                println("Error: ${e.message}")
                 runOnUiThread {
+                    isSearching = false
+                    toggleAdapter()
                     Toast.makeText(this@AddEditItemActivity, "Failed to fetch items", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
-                println("Response received: ${response}")
                 if (response.isSuccessful) {
                     response.body?.let { responseBody ->
                         val jsonString = responseBody.string()
-                        println("Response body: $jsonString")
 
                         val items = mutableListOf<Item>()
                         try {
                             val jsonArray = JSONArray(jsonString)
-                            println("Parsed JSON Array: $jsonArray")
                             for (i in 0 until jsonArray.length()) {
                                 val jsonObject = jsonArray.getJSONObject(i)
                                 val name = jsonObject.getString("name")
                                 val description = jsonObject.getString("description")
                                 val subcategory = jsonObject.getString("subcategory")
                                 val company = jsonObject.getString("company")
-
                                 items.add(Item(name, description, subcategory, company))
-                                println("Item added: Name=$name, Description=$description")
                             }
                             runOnUiThread {
                                 itemsList.clear()
                                 itemsList.addAll(items)
                                 itemsAdapter.notifyDataSetChanged()
-                                println("Items list updated: $itemsList")
                             }
                         } catch (e: Exception) {
                             Log.e("AddEditItemActivity", "Error parsing items: ${e.message}")
-                            println("JSON Parse Error: ${e.message}")
                         }
                     }
                 } else {
-                    Log.e("AddEditItemActivity", "Server returned error: ${response.message}")
-                    println("Server Error: ${response.message}")
                     runOnUiThread {
+                        isSearching = false
+                        toggleAdapter()
                         Toast.makeText(this@AddEditItemActivity, "Error: ${response.message}", Toast.LENGTH_SHORT).show()
                     }
                 }

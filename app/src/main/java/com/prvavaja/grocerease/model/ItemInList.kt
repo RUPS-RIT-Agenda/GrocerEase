@@ -8,7 +8,7 @@ class ItemInList(
     @SerialName("itemId") var item: Item,
     @SerialName("bought") var bought: Boolean = false,
     @SerialName("note") var note: String? = null,
-    @SerialName("quantity") var quantity: String = "1",
+    @SerialName("quantity") var quantity: String,
     @SerialName("_id") var id: String? = null
 ) {
     override fun equals(other: Any?): Boolean {

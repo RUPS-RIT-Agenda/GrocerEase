@@ -96,4 +96,43 @@ class BackendOperations {
             }
         }.start()
     }
+
+    fun addItemToList(
+        listId: String,
+        itemId: String,
+        quantity: String,
+        note: String? = null,
+        bought: Boolean = false,
+        callback: (Boolean, String?) -> Unit
+    ) {
+        val url = "$baseUrl/$listId/add-item"
+        val requestBody = """
+        {
+            "itemId": "$itemId",
+            "quantity": "$quantity",
+            "note": ${if (note != null) "\"$note\"" else "null"},
+            "bought": $bought
+        }
+    """.trimIndent()
+
+        val request = Request.Builder()
+            .url(url)
+            .post(requestBody.toRequestBody("application/json".toMediaType()))
+            .build()
+
+        Thread {
+            try {
+                val response = client.newCall(request).execute()
+                if (response.isSuccessful) {
+                    callback(true, null)
+                } else {
+                    callback(false, response.message)
+                }
+            } catch (e: Exception) {
+                Log.e("BackendOperations", "Error adding item to list", e)
+                callback(false, e.message)
+            }
+        }.start()
+    }
+
 }

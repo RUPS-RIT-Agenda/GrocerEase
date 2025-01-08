@@ -13,6 +13,8 @@ import com.prvavaja.grocerease.MyApplication
 import com.prvavaja.grocerease.R
 import com.prvavaja.grocerease.SingleListActivity
 import com.prvavaja.grocerease.model.Serialization
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class MyAdapterLists(val app: MyApplication) :
     RecyclerView.Adapter<MyAdapterLists.MyViewHolder>() {
@@ -35,7 +37,16 @@ class MyAdapterLists(val app: MyApplication) :
         holder.listNameTV.text = current.listName
         holder.storeNameTV.text = "List for store: ${current.company}"
         holder.numOfItemsTV.text = current.items.size.toString()
-        holder.createdTV.text = current.date
+
+        val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+        val formattedDate = try {
+            val isoDate = java.time.OffsetDateTime.parse(current.date)
+            isoDate.toLocalDate().format(dateFormatter)
+        } catch (e: Exception) {
+            current.date
+        }
+
+        holder.createdTV.text = formattedDate
 
         holder.itemView.setOnLongClickListener {
             showDeleteConfirmationDialog(holder.itemView.context, position)

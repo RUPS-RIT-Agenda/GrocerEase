@@ -9,38 +9,25 @@ import kotlinx.serialization.encoding.Decoder
 import java.util.UUID
 
 @Serializable
-class Item(
+data class Item(
     @SerialName("name") var name: String,
     @SerialName("description") var description: String,
     @SerialName("subcategory") var subcategory: String,
-    @SerialName("company") var company: String
+    @SerialName("company") var company: String,
+    @SerialName("_id") var id: String? = null
 ) {
-    @Serializable(with = UUIDSerializer::class)
-    var uuid: UUID = UUID.randomUUID()
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || javaClass != other.javaClass) return false
         val otherItem = other as Item
-        return uuid == otherItem.uuid
+        return id == otherItem.id
     }
 
     override fun hashCode(): Int {
-        return uuid.hashCode()
+        return id.hashCode()
     }
 
     override fun toString(): String {
-        return "item, Name: $name, UUID: $uuid, Company: $company, Description: $description, Subcategory: $subcategory"
-    }
-
-    object UUIDSerializer : KSerializer<UUID> {
-        override val descriptor = PrimitiveSerialDescriptor("UUID", PrimitiveKind.STRING)
-        override fun deserialize(decoder: Decoder): UUID {
-            return UUID.fromString(decoder.decodeString())
-        }
-
-        override fun serialize(encoder: kotlinx.serialization.encoding.Encoder, value: UUID) {
-            encoder.encodeString(value.toString())
-        }
+        return "item, Name: $name, UUID: $id, Company: $company, Description: $description, Subcategory: $subcategory"
     }
 }

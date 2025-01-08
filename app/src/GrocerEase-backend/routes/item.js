@@ -35,4 +35,21 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/:subcategory', async (req, res) => {
+    const { subcategory } = req.params;
+
+    try {
+        const items = await Item.find({ subcategory });
+
+        if (items.length === 0) {
+            return res.status(404).json({ message: "No items found for this subcategory" });
+        }
+
+        res.status(200).json(items);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
 module.exports = router;
