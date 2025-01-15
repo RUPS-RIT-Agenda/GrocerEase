@@ -13,11 +13,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.prvavaja.grocerease.MyApplication
 import com.prvavaja.grocerease.R
 import com.prvavaja.grocerease.SingleListActivity
+import com.prvavaja.grocerease.model.GroceryList
 import com.prvavaja.grocerease.model.Serialization
 import java.time.format.DateTimeFormatter
 
 class MyAdapterLists(val app: MyApplication) :
     RecyclerView.Adapter<MyAdapterLists.MyViewHolder>() {
+
+    private var displayedLists: List<GroceryList> = app.listOfgrocerylists.getAllLists()
 
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val listNameTV: TextView = itemView.findViewById(R.id.listNameTV)
@@ -33,7 +36,7 @@ class MyAdapterLists(val app: MyApplication) :
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val current = app.listOfgrocerylists.getAllLists()[position]
+        val current = displayedLists[position]
         holder.listNameTV.text = current.listName
         holder.storeNameTV.text = "List for store: ${current.company}"
         holder.numOfItemsTV.text = current.items.size.toString()
@@ -56,15 +59,14 @@ class MyAdapterLists(val app: MyApplication) :
         }
     }
 
-
     private fun showGroceryList(context: Context, position: Int) {
         val intent = Intent(context, SingleListActivity::class.java)
-        app.currentList = app.listOfgrocerylists.getAllLists()[position]
+        app.currentList = displayedLists[position]
         context.startActivity(intent)
     }
 
     private fun showDeleteConfirmationDialog(context: Context, position: Int) {
-        val currentList = app.listOfgrocerylists.getAllLists()[position]
+        val currentList = displayedLists[position]
 
         val alertDialogBuilder = AlertDialog.Builder(context)
         alertDialogBuilder.setTitle("Delete Shopping List")
@@ -75,8 +77,8 @@ class MyAdapterLists(val app: MyApplication) :
 
             serialization.delete(currentList.id)
 
-            app.listOfgrocerylists.getAllLists().removeAt(position)
-            notifyItemRemoved(position)
+            app.listOfgrocerylists.getAllLists().remove(currentList)
+            updateData(app.listOfgrocerylists.getAllLists())
 
             Toast.makeText(context, "Shopping list \"${currentList.listName}\" deleted.", Toast.LENGTH_SHORT).show()
         }
@@ -85,11 +87,14 @@ class MyAdapterLists(val app: MyApplication) :
             dialog.dismiss()
         }
 
-        // Show the dialog
         val alertDialog: AlertDialog = alertDialogBuilder.create()
         alertDialog.show()
     }
 
+    fun updateData(newLists: List<GroceryList>) {
+        displayedLists = newLists
+        notifyDataSetChanged()
+    }
 
-    override fun getItemCount() = app.listOfgrocerylists.getAllLists().size
+    override fun getItemCount() = displayedLists.size
 }

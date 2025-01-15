@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import android.widget.EditText
@@ -46,8 +48,38 @@ class ListsActivity : AppCompatActivity() {
 
         binding.backBTN.setOnClickListener { backOnClick() }
         binding.btnAdd.setOnClickListener { addListOnClick() }
+
+        setupFilterSpinner()
     }
 
+    private fun setupFilterSpinner() {
+        val stores = listOf("All stores", "Mercator", "Hofer", "Lidl", "Spar")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, stores)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        binding.filterSpinner.adapter = adapter
+
+        binding.filterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val selectedStore = stores[position]
+                filterListsByStore(selectedStore)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
+    }
+
+
+    private fun filterListsByStore(store: String) {
+        val filteredLists = if (store == "All stores") {
+            app.listOfgrocerylists.getAllLists()
+        } else {
+            app.listOfgrocerylists.getAllLists().filter { it.company == store }
+        }
+
+        myAdapter.updateData(filteredLists)
+    }
 
     private fun backOnClick() {
         val intent = Intent(this, HomeActivity::class.java)
