@@ -161,4 +161,93 @@ class BackendOperations {
         }
     }
 
+    fun updateItemInList(
+        listId: String,
+        itemId: String,
+        bought: Boolean? = null,
+        quantity: String? = null,
+        callback: (Boolean, String?) -> Unit
+    ) {
+        val url = "$baseUrl/$listId/update-item/$itemId"
+        val requestBody = """
+        {
+            ${bought?.let { "\"bought\": $it," } ?: ""}
+            ${quantity?.let { "\"quantity\": \"$it\"" } ?: ""}
+        }
+        """.trimIndent().removeSuffix(",")
+
+        val request = Request.Builder()
+            .url(url)
+            .patch(requestBody.toRequestBody("application/json".toMediaType()))
+            .build()
+
+        Thread {
+            try {
+                val response = client.newCall(request).execute()
+                if (response.isSuccessful) {
+                    callback(true, null)
+                } else {
+                    callback(false, response.message)
+                }
+            } catch (e: Exception) {
+                Log.e("BackendOperations", "Error updating item in list", e)
+                callback(false, e.message)
+            }
+        }.start()
+    }
+
+    fun deleteList(
+        listId: String,
+        callback: (Boolean, String?) -> Unit
+    ) {
+        val url = "$baseUrl/$listId"
+
+        val request = Request.Builder()
+            .url(url)
+            .delete()
+            .build()
+
+        Thread {
+            try {
+                val response = client.newCall(request).execute()
+                if (response.isSuccessful) {
+                    callback(true, null)
+                } else {
+                    callback(false, response.message)
+                }
+            } catch (e: Exception) {
+                Log.e("BackendOperations", "Error deleting list", e)
+                callback(false, e.message)
+            }
+        }.start()
+    }
+
+    fun deleteItemFromList(
+        listId: String,
+        itemId: String,
+        callback: (Boolean, String?) -> Unit
+    ) {
+        val url = "$baseUrl/$listId/delete-item/$itemId"
+
+        val request = Request.Builder()
+            .url(url)
+            .delete()
+            .build()
+
+        Thread {
+            try {
+                val response = client.newCall(request).execute()
+                if (response.isSuccessful) {
+                    callback(true, null)
+                } else {
+                    callback(false, response.message)
+                }
+            } catch (e: Exception) {
+                Log.e("BackendOperations", "Error deleting item from list", e)
+                callback(false, e.message)
+            }
+        }.start()
+    }
+
+
 }
