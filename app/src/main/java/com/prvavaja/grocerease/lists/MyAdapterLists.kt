@@ -6,6 +6,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +14,6 @@ import com.prvavaja.grocerease.MyApplication
 import com.prvavaja.grocerease.R
 import com.prvavaja.grocerease.SingleListActivity
 import com.prvavaja.grocerease.model.Serialization
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class MyAdapterLists(val app: MyApplication) :
@@ -45,17 +45,17 @@ class MyAdapterLists(val app: MyApplication) :
         } catch (e: Exception) {
             current.date
         }
-
         holder.createdTV.text = formattedDate
 
-        holder.itemView.setOnLongClickListener {
+        holder.itemView.findViewById<ImageButton>(R.id.deleteButton).setOnClickListener {
             showDeleteConfirmationDialog(holder.itemView.context, position)
-            true
         }
+
         holder.itemView.setOnClickListener {
             showGroceryList(holder.itemView.context, position)
         }
     }
+
 
     private fun showGroceryList(context: Context, position: Int) {
         val intent = Intent(context, SingleListActivity::class.java)
@@ -64,29 +64,32 @@ class MyAdapterLists(val app: MyApplication) :
     }
 
     private fun showDeleteConfirmationDialog(context: Context, position: Int) {
-        if(app.listOfgrocerylists.getAllLists()[position].items.size >= 1){
-            Toast.makeText(context, "You can't delete shopping lists that have items in it", Toast.LENGTH_SHORT).show()
-            return
-        }
+        val currentList = app.listOfgrocerylists.getAllLists()[position]
+
         val alertDialogBuilder = AlertDialog.Builder(context)
-        alertDialogBuilder.setTitle("Delete Item")
-        alertDialogBuilder.setMessage("Are you sure you want to delete this item?")
+        alertDialogBuilder.setTitle("Delete Shopping List")
+        alertDialogBuilder.setMessage("Are you sure you want to delete the shopping list \"${currentList.listName}\"?")
 
         alertDialogBuilder.setPositiveButton("Yes") { _, _ ->
             val serialization = Serialization(context)
-            serialization.delete(app.listOfgrocerylists.getAllLists()[position].id)
-            app.listOfgrocerylists.getAllLists().removeAt(position)
 
+            serialization.delete(currentList.id)
+
+            app.listOfgrocerylists.getAllLists().removeAt(position)
             notifyItemRemoved(position)
+
+            Toast.makeText(context, "Shopping list \"${currentList.listName}\" deleted.", Toast.LENGTH_SHORT).show()
         }
 
         alertDialogBuilder.setNegativeButton("No") { dialog, _ ->
             dialog.dismiss()
         }
 
+        // Show the dialog
         val alertDialog: AlertDialog = alertDialogBuilder.create()
         alertDialog.show()
     }
+
 
     override fun getItemCount() = app.listOfgrocerylists.getAllLists().size
 }

@@ -28,11 +28,11 @@ class AddEditItemActivity : AppCompatActivity() {
     private val client = OkHttpClient()
     private var categories: List<Category> = emptyList()
     private val subcategoriesMap = mutableMapOf<String, List<String>>()
-    private val itemsList = mutableListOf<Item>() // Items from backend
+    private val itemsList = mutableListOf<Item>()
     private val itemsInList = mutableListOf<ItemInList>()
     private lateinit var itemsAdapter: ItemsAdapter
     private lateinit var itemsInListAdapter: ItemsInListAdapter
-    private var isSearching: Boolean = false // To toggle between adapters
+    private var isSearching: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
