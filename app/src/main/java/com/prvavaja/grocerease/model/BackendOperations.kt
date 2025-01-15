@@ -249,5 +249,39 @@ class BackendOperations {
         }.start()
     }
 
+    fun addToFavorites(
+        userId: String,
+        storeId: String,
+        callback: (Boolean, String?) -> Unit
+    ) {
+        val url = "http://$apiHost:$apiPort/api/user/favorites"
+        val requestBody = """
+        {
+            "userId": "$userId",
+            "storeId": "$storeId"
+        }
+    """.trimIndent()
+
+        val request = Request.Builder()
+            .url(url)
+            .post(requestBody.toRequestBody("application/json".toMediaType()))
+            .build()
+
+        Thread {
+            try {
+                val response = client.newCall(request).execute()
+                if (response.isSuccessful) {
+                    callback(true, null)
+                } else {
+                    callback(false, response.message)
+                }
+            } catch (e: Exception) {
+                Log.e("BackendOperations", "Error adding store to favorites", e)
+                callback(false, e.message)
+            }
+        }.start()
+    }
+
+
 
 }

@@ -72,6 +72,11 @@ class MapActivity : AppCompatActivity() {
         mapController.setZoom(14)
         val defaultLocation = GeoPoint(46.5547, 15.6459)
         mapController.setCenter(defaultLocation)
+
+        binding.favouritesButton.setOnClickListener {
+            val intent = Intent(this@MapActivity, FavouriteStoresActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     fun filterOnClick(view: View) {

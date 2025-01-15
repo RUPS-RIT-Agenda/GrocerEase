@@ -99,4 +99,18 @@
         app:srcCompat="@drawable/baseline_arrow_back_ios_new_24"
         app:tint="@color/myColorLight" />
 
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="55dp"
+        android:background="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/baseline_favorite_24"
+        app:tint="@color/myColorLight"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

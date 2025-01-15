@@ -73,6 +73,7 @@
         <activity android:name=".HomeActivity" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".SingleStoreActivity" />
+        <activity android:name=".FavouriteStoresActivity" />
     </application>
 
 </manifest>
