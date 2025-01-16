@@ -12,33 +12,23 @@ import android.widget.EditText
 import android.widget.Spinner
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.prvavaja.grocerease.databinding.ActivityListsBinding
 import com.prvavaja.grocerease.model.GroceryList
 import com.prvavaja.grocerease.lists.MyAdapterLists
-import com.prvavaja.grocerease.model.BackendOperations
-import com.prvavaja.grocerease.model.Serialization
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class ListsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityListsBinding
     lateinit var app: MyApplication
     lateinit var myAdapter: MyAdapterLists
-    lateinit var serialization: Serialization
-    private lateinit var backendOperations: BackendOperations
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityListsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        serialization = Serialization(this)
         app = application as MyApplication
         myAdapter = MyAdapterLists(app)
-
-        backendOperations = BackendOperations();
 
         with(binding.recyclerView) {
             setHasFixedSize(true)
@@ -69,7 +59,6 @@ class ListsActivity : AppCompatActivity() {
             }
         }
     }
-
 
     private fun filterListsByStore(store: String) {
         val filteredLists = if (store == "All stores") {
@@ -118,20 +107,16 @@ class ListsActivity : AppCompatActivity() {
                     confirmBuilder.setTitle("Confirm")
                         .setMessage("Are you sure you want to create a new Shopping list named \"$listName\" for company \"$selectedCompany\" on $selectedDate?")
                         .setPositiveButton("Yes") { _, _ ->
-                            backendOperations.createList(
-                                userID = "677d9c1c0ba26c182a42f654",
-                                name = listName,
+                            val newList = GroceryList(
+                                listName = listName,
                                 company = selectedCompany,
-                                description = "A new shopping list",
-                                date = selectedDate
-                            ) { createdList ->
-                                if (createdList != null) {
-                                    app.listOfgrocerylists.addList(createdList)
-                                    binding.recyclerView.adapter?.notifyItemInserted(app.listOfgrocerylists.size() - 1)
-                                } else {
-                                    Log.e("Lists", "Failed to create list on backend!")
-                                }
-                            }
+                                date = selectedDate,
+                                id = System.currentTimeMillis().toString() // Generate a unique ID
+                            )
+
+                            app.listOfgrocerylists.addList(newList)
+                            myAdapter.updateData(app.listOfgrocerylists.getAllLists())
+                            binding.recyclerView.adapter?.notifyItemInserted(app.listOfgrocerylists.size() - 1)
                         }
                         .setNegativeButton("Cancel") { _, _ ->
                             Log.d("Lists", "List creation canceled!")

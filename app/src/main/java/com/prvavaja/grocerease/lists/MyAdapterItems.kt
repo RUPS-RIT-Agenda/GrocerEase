@@ -15,8 +15,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.prvavaja.grocerease.AddEditItemActivity
 import com.prvavaja.grocerease.MyApplication
 import com.prvavaja.grocerease.R
-import com.prvavaja.grocerease.model.BackendOperations
-import com.prvavaja.grocerease.model.Serialization
 
 class MyAdapterItems(val app: MyApplication) : RecyclerView.Adapter<MyAdapterItems.MyViewHolder>() {
 
@@ -44,6 +42,7 @@ class MyAdapterItems(val app: MyApplication) : RecyclerView.Adapter<MyAdapterIte
             "Note: ${current.note}"
         }
 
+        // Edit note functionality
         holder.editTV.setOnClickListener {
             Log.d("MyAdapterItems", "Edit button clicked for item: ${current.item.name}")
             val context = holder.itemView.context
@@ -56,30 +55,15 @@ class MyAdapterItems(val app: MyApplication) : RecyclerView.Adapter<MyAdapterIte
                 .setView(dialogView)
                 .setPositiveButton("Save") { _, _ ->
                     val newNote = noteEditText.text.toString()
-                    val listId = app.currentList.id
-                    val itemId = current.item.id ?: return@setPositiveButton
-
-                    if (listId != null) {
-                        BackendOperations().updateItemInList(
-                            listId,
-                            itemId,
-                            quantity = current.quantity,
-                            callback = { success, error ->
-                                if (success) {
-                                    current.note = newNote
-                                    notifyItemChanged(position)
-                                    Log.d("MyAdapterItems", "Note updated successfully")
-                                } else {
-                                    Log.e("MyAdapterItems", "Error updating note: $error")
-                                }
-                            }
-                        )
-                    }
+                    current.note = newNote
+                    notifyItemChanged(position) // Update the UI
+                    Log.d("MyAdapterItems", "Note updated to: $newNote")
                 }
                 .setNegativeButton("Cancel", null)
                 .show()
         }
 
+        // Delete item functionality
         holder.deleteTV.setOnClickListener {
             Log.d("MyAdapterItems", "Delete button clicked for item: ${current.item.name}")
             val context = holder.itemView.context
@@ -88,25 +72,10 @@ class MyAdapterItems(val app: MyApplication) : RecyclerView.Adapter<MyAdapterIte
                 .setTitle("Delete Item")
                 .setMessage("Are you sure you want to delete this item from your list?")
                 .setPositiveButton("Yes") { _, _ ->
-                    val listId = app.currentList.id
-                    val itemId = current.item.id ?: return@setPositiveButton
-
-                    if (listId != null) {
-                        BackendOperations().deleteItemFromList(
-                            listId,
-                            itemId,
-                            callback = { success, error ->
-                                if (success) {
-                                    app.currentList.items.removeAt(position)
-                                    notifyItemRemoved(position)
-                                    notifyItemRangeChanged(position, app.currentList.items.size)
-                                    Log.d("MyAdapterItems", "Item deleted successfully")
-                                } else {
-                                    Log.e("MyAdapterItems", "Error deleting item: $error")
-                                }
-                            }
-                        )
-                    }
+                    app.currentList.items.removeAt(position)
+                    notifyItemRemoved(position)
+                    notifyItemRangeChanged(position, app.currentList.items.size)
+                    Log.d("MyAdapterItems", "Item deleted: ${current.item.name}")
                 }
                 .setNegativeButton("No", null)
                 .show()
@@ -117,7 +86,6 @@ class MyAdapterItems(val app: MyApplication) : RecyclerView.Adapter<MyAdapterIte
             true
         }
 
-        // Optional: Regular click
         holder.itemView.setOnClickListener {
             openEditActivity(holder.itemView.context, position)
         }

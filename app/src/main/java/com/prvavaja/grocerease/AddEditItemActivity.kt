@@ -1,5 +1,6 @@
 package com.prvavaja.grocerease
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,6 +10,7 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.Logger
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.prvavaja.grocerease.databinding.ActivityAddEditItemBinding
 import com.prvavaja.grocerease.lists.ItemsAdapter
@@ -33,6 +35,7 @@ class AddEditItemActivity : AppCompatActivity() {
     private lateinit var itemsAdapter: ItemsAdapter
     private lateinit var itemsInListAdapter: ItemsInListAdapter
     private var isSearching: Boolean = false
+    private var listId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +51,7 @@ class AddEditItemActivity : AppCompatActivity() {
         setupRecyclerViews()
         fetchCategoriesFromServer()
     }
+
 
     private fun setupRecyclerViews() {
         itemsAdapter = ItemsAdapter(itemsList) { item ->
@@ -138,26 +142,29 @@ class AddEditItemActivity : AppCompatActivity() {
             .setPositiveButton("Add") { _, _ ->
                 val quantity = quantityInput.text.toString()
                 if (quantity.isNotEmpty()) {
-                    val listId = "677d855444e36ca6fa5a2370" // Replace with actual list ID
-                    item.id?.let { itemId ->
-                        BackendOperations().addItemToList(listId, itemId, quantity) { success, error ->
-                            runOnUiThread {
-                                if (success) {
-                                    val itemInList = ItemInList(
-                                        item = item,
-                                        quantity = quantity
-                                    )
-                                    // Add the item to itemsInList
-                                    itemsInList.add(itemInList)
-                                    itemsInListAdapter.notifyDataSetChanged()
-                                    toggleAdapter() // Switch back to added items view
-                                    Toast.makeText(this, "${item.name} added with quantity: $quantity", Toast.LENGTH_SHORT).show()
-                                } else {
-                                    Toast.makeText(this, "Failed to add item: $error", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        }
+                    Log.d("Item", "$item")
+                    Log.d("Quantity", quantity)
+
+                    val itemInList = ItemInList(
+                        item = item,
+                        quantity = quantity
+                    )
+
+                    itemsInList.add(itemInList)
+                    itemsInListAdapter.notifyDataSetChanged()
+
+                    val resultIntent = Intent().apply {
+                        putExtra("ITEM_ID", item.id)
+                        putExtra("ITEM_NAME", item.name)
+                        putExtra("ITEM_DESCRIPTION", item.description)
+                        putExtra("ITEM_SUBCATEGORY", item.subcategory)
+                        putExtra("ITEM_COMPANY", item.company)
+                        putExtra("ITEM_QUANTITY", quantity)
                     }
+                    setResult(RESULT_OK, resultIntent)
+                    finish()
+
+                    Toast.makeText(this, "${item.name} added with quantity: $quantity", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, "Please enter a quantity", Toast.LENGTH_SHORT).show()
                 }
@@ -165,6 +172,7 @@ class AddEditItemActivity : AppCompatActivity() {
             .setNegativeButton("Cancel", null)
             .show()
     }
+
 
     private fun setupSubcategoryDropdown(subcategories: List<String>) {
         val subcategoryAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, subcategories)
