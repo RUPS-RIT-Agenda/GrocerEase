@@ -1,5 +1,7 @@
 package com.prvavaja.grocerease.lists
 
+import android.graphics.BitmapFactory
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,12 +29,24 @@ class CardAdapter(private val cardList: List<Card>) : RecyclerView.Adapter<CardA
         val card = cardList[position]
         holder.barcodeText.text = card.barcodeNum
         holder.shopNameText.text = card.shopName
-
-        Picasso.get()
-            .load(card.imgUrl)
-            .placeholder(R.drawable.baseline_image_24)
-            .error(R.drawable.baseline_image_not_supported_24)
-            .into(holder.cardImageView)
+        val base64Image = card.imgUrl
+        if (base64Image != null) {
+            try {
+                // Decode Base64 string into a byte array
+                val imageBytes = Base64.decode(base64Image.split(",").last(), Base64.DEFAULT)
+                // Convert byte array into a Bitmap
+                val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                // Set the Bitmap to the ImageView
+                holder.cardImageView.setImageBitmap(bitmap)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                // Set a placeholder image in case of an error
+                holder.cardImageView.setImageResource(R.drawable.baseline_image_not_supported_24)
+            }
+        } else {
+            // Set a placeholder image if no Base64 string is provided
+            holder.cardImageView.setImageResource(R.drawable.baseline_image_24)
+        }
     }
 
     override fun getItemCount() = cardList.size

@@ -4,14 +4,14 @@ const Card = require('../models/Card');
 const path = require('path');
 const router = express.Router();
 
-router.post('/save', async (req, res) => {
+router.post('/save',async (req, res) => {
     try {
-        const {barcodeNum, shopName, cardImgUrl} = req.body;
+        const {barcodeNum, shopName, cardImg} = req.body;
 
         const newCard = new Card({
             barcodeNum,
             shopName,
-            cardImg: cardImgUrl,
+            cardImg: cardImg,
         });
 
         await newCard.save();

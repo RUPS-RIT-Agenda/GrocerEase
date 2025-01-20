@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Barcode"
+        android:textColor="@color/darkGreen"
         android:textSize="16sp"
         android:textStyle="bold"
         android:paddingBottom="4dp" />
@@ -20,6 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Shop Name"
+        android:textColor="@color/darkGreen"
         android:textSize="14sp"
         android:paddingBottom="8dp" />
 

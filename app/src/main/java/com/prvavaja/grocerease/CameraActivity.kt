@@ -128,9 +128,9 @@ class CameraActivity : AppCompatActivity() {
                         val barcodeNum = JsonPrimitive("")
 
                         val jsonBody = buildJsonObject {
-                            put("cardImgUrl", cardImgUrl)
-                            put("pi_double", shopName)
-                            put("pi_string", barcodeNum)
+                            put("cardImg", cardImgUrl)
+                            put("shopName", shopName)
+                            put("barcodeNum", barcodeNum)
                         }
 
                         val requestBody = Json{prettyPrint = true}.encodeToString(jsonBody).toRequestBody(jsonMediaType)
